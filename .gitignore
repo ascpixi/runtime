@@ -1,5 +1,9 @@
 syntax: glob
 
+# The "build" directory seems to only contain auto-generated CMake-related files.
+# Not sure why this isn't included in upstream (this is a libryujit addition)
+build
+
 ### VisualStudio ###
 
 # Tool Runtime Dir
