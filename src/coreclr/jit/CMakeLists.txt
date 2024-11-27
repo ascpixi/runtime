@@ -93,7 +93,7 @@ endif(CLR_CMAKE_TARGET_WIN32)
 set( JIT_SOURCES
 
   # ascpixi/libryujit additions
-  interop.cpp
+  libryujit/interop.cpp
 
   abi.cpp
   alloc.cpp
