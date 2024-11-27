@@ -573,7 +573,7 @@ function(add_jit jitName)
       # If generating for Visual Studio then include headers for a better
       # IDE experience.
       add_library_clr(${jitName}
-          SHARED
+          STATIC
           ${JIT_SOURCES}
           ${JIT_ARCH_SOURCES}
           ${JIT_HEADERS}
@@ -584,7 +584,7 @@ function(add_jit jitName)
       )
     else()
       add_library_clr(${jitName}
-          SHARED
+          STATIC
           ${JIT_SOURCES}
           ${JIT_ARCH_SOURCES}
           ${JIT_RESOURCES}
@@ -600,10 +600,10 @@ function(add_jit jitName)
     target_include_directories(${jitName} PRIVATE ${JIT_SOURCE_DIR})
     target_precompile_headers(${jitName} PRIVATE "$<$<COMPILE_LANGUAGE:CXX>:jitpch.h>")
 
-    add_dependencies(${jitName} jit_exports)
+    #add_dependencies(${jitName} jit_exports)
 
-    set_property(TARGET ${jitName} APPEND_STRING PROPERTY LINK_FLAGS ${JIT_EXPORTS_LINKER_OPTION})
-    set_property(TARGET ${jitName} APPEND_STRING PROPERTY LINK_DEPENDS ${JIT_EXPORTS_FILE})
+    #set_property(TARGET ${jitName} APPEND_STRING PROPERTY LINK_FLAGS ${JIT_EXPORTS_LINKER_OPTION})
+    #set_property(TARGET ${jitName} APPEND_STRING PROPERTY LINK_DEPENDS ${JIT_EXPORTS_FILE})
 
     target_link_libraries(${jitName}
         PRIVATE
