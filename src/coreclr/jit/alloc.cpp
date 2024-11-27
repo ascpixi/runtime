@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #include "jitpch.h"
+#include "libryujit/host.h"
 
 #if defined(_MSC_VER)
 #pragma hdrstop
@@ -160,7 +161,7 @@ void* ArenaAllocator::allocateHostMemory(size_t size, size_t* pActualSize)
         {
             size = 1;
         }
-        void* p = malloc(size);
+        void* p = ryujit_host_alloc(size);
         if (p == nullptr)
         {
             NOMEM();
@@ -183,7 +184,7 @@ void ArenaAllocator::freeHostMemory(void* block, size_t size)
 #if defined(DEBUG)
     if (bypassHostAllocator())
     {
-        free(block);
+        ryujit_host_free(block);
         return;
     }
 #endif // !defined(DEBUG)
