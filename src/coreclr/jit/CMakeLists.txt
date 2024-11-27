@@ -91,6 +91,10 @@ if(CLR_CMAKE_TARGET_WIN32)
 endif(CLR_CMAKE_TARGET_WIN32)
 
 set( JIT_SOURCES
+
+  # ascpixi/libryujit additions
+  interop.cpp
+
   abi.cpp
   alloc.cpp
   assertionprop.cpp
