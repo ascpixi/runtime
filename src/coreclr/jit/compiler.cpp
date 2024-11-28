@@ -23,6 +23,8 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 #include "patchpointinfo.h"
 #include "jitstd/algorithm.h"
 
+#include "libryujit/errorhandling.h"
+
 extern ICorJitHost* g_jitHost;
 
 unsigned Compiler::jitTotalMethodCompiled = 0;
@@ -6346,13 +6348,17 @@ int Compiler::compCompile(CORINFO_MODULE_HANDLE classPtr,
     param.compileFlags   = compileFlags;
     param.result         = CORJIT_INTERNALERROR;
 
-    setErrorTrap(info.compCompHnd, Param*, pParam, &param) // ERROR TRAP: Start normal block
+    auto pParam = &param;
+
+    //setErrorTrap(info.compCompHnd, Param*, pParam, &param) // ERROR TRAP: Start normal block
+    TRY
     {
         pParam->result =
             pParam->pThis->compCompileHelper(pParam->classPtr, pParam->compHnd, pParam->methodInfo,
                                              pParam->methodCodePtr, pParam->methodCodeSize, pParam->compileFlags);
     }
-    finallyErrorTrap() // ERROR TRAP: The following block handles errors
+    /*finallyErrorTrap()*/ // ERROR TRAP: The following block handles errors
+    FINALLY
     {
         /* Cleanup  */
 
@@ -6367,10 +6373,10 @@ int Compiler::compCompile(CORINFO_MODULE_HANDLE classPtr,
 
     DoneCleanUp:
         compDone();
-    }
-    endErrorTrap() // ERROR TRAP: End
+    } END_FINALLY;
+    //endErrorTrap() // ERROR TRAP: End
 
-        return param.result;
+    return param.result;
 }
 
 #if defined(DEBUG)
@@ -7772,10 +7778,15 @@ START:
 #endif
     param.result = result;
 
+    auto pParamOuter = &param;
+
     // clang-format off
-    setErrorTrap(compHnd, Param*, pParamOuter, &param)
+    //setErrorTrap(compHnd, Param*, pParamOuter, &param)
+    TRY
     {
-        setErrorTrap(nullptr, Param*, pParam, pParamOuter)
+        auto pParam = pParamOuter;
+        //setErrorTrap(nullptr, Param*, pParam, pParamOuter)
+        TRY
         {
             void* compilerMem;
             if (pParam->inlineInfo)
@@ -7821,7 +7832,8 @@ START:
             pParam->result =
                 pParam->pComp->compCompile(pParam->classPtr, pParam->methodCodePtr, pParam->methodCodeSize, pParam->compileFlags);
         }
-        finallyErrorTrap()
+        //finallyErrorTrap()
+        FINALLY
         {
             Compiler* pCompiler = pParamOuter->pComp;
 
@@ -7842,10 +7854,11 @@ START:
                 // Free up the allocator we were using
                 pParamOuter->pAlloc->destroy();
             }
-        }
-        endErrorTrap()
+        } END_FINALLY
+        //endErrorTrap()
     }
-    impJitErrorTrap()
+    //impJitErrorTrap()
+    CATCH (int __errc)
     {
         // If we were looking at an inlinee....
         if (inlineInfo != nullptr)
@@ -7855,8 +7868,8 @@ START:
             inlineInfo->inlineResult->NoteFatal(InlineObservation::CALLEE_COMPILATION_ERROR);
         }
         param.result = __errc;
-    }
-    endErrorTrap()
+    } END_CATCH;
+    //endErrorTrap()
     // clang-format on
 
     result = param.result;

@@ -2,8 +2,8 @@
 
 #include "corjithost.h"
 #include "corjit.h"
-#include "interopjitinfo.h"
-#include "host.h"
+#include "libryujit/interopjitinfo.h"
+#include "libryujit/host.h"
 
 #ifndef DLLEXPORT
     #define DLLEXPORT

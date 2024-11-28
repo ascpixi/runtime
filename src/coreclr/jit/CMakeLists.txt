@@ -15,6 +15,10 @@ if (MSVC)
   add_compile_options($<$<COMPILE_LANGUAGE:C,CXX>:/permissive->)
 endif()
 
+if (!MSVC)
+    add_compile_options(-fno-exceptions)
+endif()
+
 function(create_standalone_jit)
 
   set(oneValueArgs TARGET OS ARCH)
@@ -94,6 +98,8 @@ set( JIT_SOURCES
 
   # ascpixi/libryujit additions
   libryujit/interop.cpp
+  libryujit/errorhandling.cpp
+  libryujit/tls.cpp
 
   abi.cpp
   alloc.cpp

@@ -18,7 +18,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 #endif
 #include "emit.h"
 #include "corexcep.h"
-#include "libryujit/host.h"
+#include "libryujit/tls.h"
 
 #if !defined(HOST_UNIX)
 #include <io.h>    // For _dup, _setmode
@@ -200,12 +200,12 @@ DLLEXPORT ICorJitCompiler* getJit()
 
 static void* GetJitTls()
 {
-    return ryujit_host_get_tls();
+    return ryujit_get_tls()->jit_data;
 }
 
 void SetJitTls(void* value)
 {
-    ryujit_host_set_tls(value);
+    ryujit_get_tls()->jit_data = value;
 }
 
 #if defined(DEBUG)

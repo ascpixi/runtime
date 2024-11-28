@@ -1,5 +1,7 @@
 #pragma once
 
+#include <limits>
+
 /// These functions must be implemented by the consumers of the static library.
 
 // Allocate memory of the given size in bytes.
@@ -42,3 +44,37 @@ extern "C" void ryujit_host_set_tls(void* ptr);
 
 // Gets the previously set per-thread pointer.
 extern "C" void* ryujit_host_get_tls();
+
+// Invoked when an unrecovable internal error occurs. The `msg` parameter
+// describes the cause of the error.
+extern "C" void ryujit_host_panic(const char* msg);
+
+// Represents an allocator, where all allocation requests are passed through
+// `ryujit_host_alloc` and `ryujit_host_free`.
+template <typename T>
+class RyujitHostAllocator {
+public:
+    using value_type = T;
+    
+    RyujitHostAllocator() noexcept {}
+    
+    template <typename U>
+    RyujitHostAllocator(const RyujitHostAllocator<U>&) noexcept {}
+
+    T* allocate(size_t n) {
+        if (n > std::numeric_limits<std::size_t>::max() / sizeof(T)) {
+            ryujit_host_panic("attempted to allocate an invalid amount of bytes");
+            return nullptr;
+        }
+            
+        if (void* ptr = ryujit_host_alloc(n * sizeof(T)))
+            return static_cast<T*>(ptr);
+            
+        ryujit_host_panic("failed to allocate host memory");
+        return nullptr;
+    }
+
+    void deallocate(T* p, size_t) noexcept {
+        ryujit_host_free(p);
+    }
+};
