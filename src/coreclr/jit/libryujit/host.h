@@ -35,3 +35,10 @@ extern "C" void* ryujit_host_alloc_slab(size_t size, size_t* pActualSize);
 // Free memory slab of the given size in bytes.
 //      Passed to: `ICorJitHost::freeSlab`
 extern "C" void ryujit_host_free_slab(void* slab, size_t actualSize);
+
+// Sets the per-thread pointer dedicated for RyuJIT. If only one thread is allowed
+// to use RyuJIT, this may be a simple getter and setter to a global variable.
+extern "C" void ryujit_host_set_tls(void* ptr);
+
+// Gets the previously set per-thread pointer.
+extern "C" void* ryujit_host_get_tls();

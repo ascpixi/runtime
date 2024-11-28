@@ -18,6 +18,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 #endif
 #include "emit.h"
 #include "corexcep.h"
+#include "libryujit/host.h"
 
 #if !defined(HOST_UNIX)
 #include <io.h>    // For _dup, _setmode
@@ -197,16 +198,14 @@ DLLEXPORT ICorJitCompiler* getJit()
 // If you are using it more broadly in retail code, you would need to understand the
 // performance implications of accessing TLS.
 
-thread_local void* gJitTls = nullptr;
-
 static void* GetJitTls()
 {
-    return gJitTls;
+    return ryujit_host_get_tls();
 }
 
 void SetJitTls(void* value)
 {
-    gJitTls = value;
+    ryujit_host_set_tls(value);
 }
 
 #if defined(DEBUG)
