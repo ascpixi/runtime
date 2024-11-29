@@ -134,7 +134,7 @@ void CHECK::Trigger(LPCSTR reason)
     EX_END_CATCH(SwallowAllExceptions);
 
 #if _DEBUG
-    DbgAssertDialog((char*)m_file, m_line, (char *)messageString);
+    ryujit_host_panic(messageString);
 #else
     OutputDebugStringUtf8(messageString);
     DebugBreak();

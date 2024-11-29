@@ -28,7 +28,7 @@ bool GetStackTraceAtContext(SString & s, struct _CONTEXT * pContext);
 
 bool _DbgBreakCheck(LPCSTR szFile, int iLine, LPCSTR szExpr, BOOL fConstrained = FALSE);
 
-extern VOID ANALYZER_NORETURN DbgAssertDialog(const char *szFile, int iLine, const char *szExpr);
+extern "C" void ryujit_host_panic(const char* msg);
 
 #define PRE_ASSERTE         /* if you need to change modes before doing asserts override */
 #define POST_ASSERTE        /* put it back */
@@ -38,7 +38,7 @@ extern VOID ANALYZER_NORETURN DbgAssertDialog(const char *szFile, int iLine, con
         do {                                                                \
              if (!(expr)) {                                                 \
                 PRE_ASSERTE                                                 \
-                DbgAssertDialog(__FILE__, __LINE__, msg);                   \
+                ryujit_host_panic(msg);                                     \
                 POST_ASSERTE                                                \
              }                                                              \
         } while (0)

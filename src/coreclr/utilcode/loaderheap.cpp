@@ -1596,7 +1596,7 @@ void UnlockedLoaderHeap::UnlockedBackoutMem(void *pMem,
                 LoaderHeapSniffer::PitchSniffer(&message);
             }
 
-            DbgAssertDialog(szFile, lineNum, (char*) message.GetUTF8());
+            ryujit_host_panic(message.GetUTF8());
 
         }
     }
@@ -2208,7 +2208,7 @@ void LoaderHeapSniffer::ValidateFreeList(UnlockedLoaderHeap *pHeap)
 
         }
 
-        DbgAssertDialog(__FILE__, __LINE__, (char*) message.GetUTF8());
+        ryujit_host_panic(message.GetUTF8());
 
     }
 
