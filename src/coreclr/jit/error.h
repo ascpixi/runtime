@@ -205,12 +205,7 @@ extern void notYetImplemented(const char* msg, const char* file, unsigned line);
     } while (0)
 
 #else
-#define BreakIfDebuggerPresent()                                                                                       \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        if (minipal_is_native_debugger_present())                                                                      \
-            DebugBreak();                                                                                              \
-    } while (0)
+#define BreakIfDebuggerPresent()
 #endif
 
 #ifdef DEBUG
