@@ -662,11 +662,11 @@ void BasicBlock::dspKind() const
         const BasicBlock* b = e->getDestinationBlock();
         if (b == nullptr)
         {
-            written = _snprintf_s(buffer, sizeOfBuffer, sizeOfBuffer, "NULL");
+            written = npf_snprintf(buffer, sizeOfBuffer, "NULL");
         }
         else
         {
-            written = _snprintf_s(buffer, sizeOfBuffer, sizeOfBuffer, FMT_BB, b->bbNum);
+            written = npf_snprintf(buffer, sizeOfBuffer, FMT_BB, b->bbNum);
         }
 
         const bool printEdgeLikelihoods = true; // TODO: parameterize this?
@@ -674,7 +674,7 @@ void BasicBlock::dspKind() const
         {
             if (e->hasLikelihood())
             {
-                written = _snprintf_s(buffer + written, sizeOfBuffer - written, sizeOfBuffer - written, "(" FMT_WT ")",
+                written = npf_snprintf(buffer + written, sizeOfBuffer - written, "(" FMT_WT ")",
                                       e->getLikelihood());
             }
         }
@@ -825,7 +825,7 @@ const char* BasicBlock::dspToString(int blockNumPadding /* = 0 */) const
 
     auto& buffer    = buffers[nextBufferIndex];
     nextBufferIndex = (nextBufferIndex + 1) % ArrLen(buffers);
-    _snprintf_s(buffer, ArrLen(buffer), ArrLen(buffer), FMT_BB "%*s [%04u]", bbNum, blockNumPadding, "", bbID);
+    npf_snprintf(buffer, ArrLen(buffer), FMT_BB "%*s [%04u]", bbNum, blockNumPadding, "", bbID);
     return buffer;
 }
 

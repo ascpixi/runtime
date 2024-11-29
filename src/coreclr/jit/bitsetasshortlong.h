@@ -12,6 +12,8 @@
 #include "bitset.h"
 #include "compilerbitsettraits.h"
 
+#include "libryujit/lib/nanoprintf.h"
+
 typedef size_t* BitSetShortLongRep;
 
 template <typename Env, typename BitSetTraits>
@@ -429,12 +431,12 @@ public:
             char*    ptr             = res;
             if (sizeof(size_t) == sizeof(int64_t))
             {
-                sprintf_s(ptr, remaining, "%016zX", bits);
+                npf_snprintf(ptr, remaining, "%016zX", bits);
             }
             else
             {
                 assert(sizeof(size_t) == sizeof(int));
-                sprintf_s(ptr, remaining, "%08X", (DWORD)bits);
+                npf_snprintf(ptr, remaining, "%08X", (DWORD)bits);
             }
             return res;
         }
@@ -1071,14 +1073,14 @@ const char* BitSetOps</*BitSetType*/ BitSetShortLongRep,
         size_t bits = bs[i - 1];
         if (sizeof(size_t) == sizeof(int64_t))
         {
-            sprintf_s(temp, remaining, "%016zX", bits);
+            npf_snprintf(temp, remaining, "%016zX", bits);
             temp += 16;
             remaining -= 16;
         }
         else
         {
             assert(sizeof(size_t) == sizeof(unsigned));
-            sprintf_s(temp, remaining, "%08X", (unsigned)bits);
+            npf_snprintf(temp, remaining, "%08X", (unsigned)bits);
             temp += 8;
             remaining -= 8;
         }

@@ -241,7 +241,7 @@ extern "C" void __cdecl assertAbort(const char* why, const char* file, unsigned 
     if (env->compiler)
     {
         phaseName = PhaseNames[env->compiler->mostRecentlyActivePhase];
-        _snprintf_s(buff, BUFF_SIZE, _TRUNCATE,
+        npf_snprintf(buff, BUFF_SIZE,
                     "Assertion failed '%s' in '%s' during '%s' (IL size %d; hash 0x%08x; %s)\n", why,
                     env->compiler->info.compFullName, phaseName, env->compiler->info.compILCodeSize,
                     env->compiler->info.compMethodHash(), env->compiler->compGetTieringName(/* short name */ true));
@@ -298,12 +298,12 @@ int vflogf(FILE* file, const char* fmt, va_list args)
 
     const int BUFF_SIZE = 8192;
     char      buffer[BUFF_SIZE];
-    int       written = _vsnprintf_s(&buffer[0], BUFF_SIZE, _TRUNCATE, fmt, args);
+    int       written = npf_vsnprintf(&buffer[0], BUFF_SIZE, fmt, args);
 
-    if (JitConfig.JitDumpToDebugger())
-    {
-        OutputDebugStringA(buffer);
-    }
+    //if (JitConfig.JitDumpToDebugger())
+    //{
+    //    OutputDebugStringA(buffer);
+    //}
 
     // We use fputs here so that this executes as fast a possible
     fputs(&buffer[0], file);

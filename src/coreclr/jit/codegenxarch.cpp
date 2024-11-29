@@ -2270,7 +2270,7 @@ void CodeGen::genCodeForTreeNode(GenTree* treeNode)
         {
 #ifdef DEBUG
             char message[256];
-            _snprintf_s(message, ArrLen(message), _TRUNCATE, "NYI: Unimplemented node type %s\n",
+            npf_snprintf(message, ArrLen(message), "NYI: Unimplemented node type %s\n",
                         GenTree::OpName(treeNode->OperGet()));
             NYIRAW(message);
 #endif

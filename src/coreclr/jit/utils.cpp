@@ -628,7 +628,7 @@ void dumpILRange(const BYTE* const codeAddr, unsigned codeSize) // in bytes
     for (IL_OFFSET offs = 0; offs < codeSize;)
     {
         char prefix[100];
-        sprintf_s(prefix, ArrLen(prefix), "IL_%04x ", offs);
+        npf_snprintf(prefix, ArrLen(prefix), "IL_%04x ", offs);
         unsigned codeBytesDumped = dumpSingleInstr(codeAddr, offs, prefix);
         offs += codeBytesDumped;
     }
@@ -649,7 +649,7 @@ const char* genES2str(BitVecTraits* traits, EXPSET_TP set)
 
     char* temp = nump;
     nump       = (nump == num1) ? num2 : num1;
-    sprintf_s(temp, bufSize, "%s", BitVecOps::ToString(traits, set));
+    npf_snprintf(temp, bufSize, "%s", BitVecOps::ToString(traits, set));
 
     return temp;
 }
@@ -683,7 +683,7 @@ const char* refCntWtd2str(weight_t refCntWtd, bool padForDecimalPlaces)
 
     if (refCntWtd >= BB_MAX_WEIGHT)
     {
-        sprintf_s(temp, bufSize, "MAX%s", strDecimalPaddingString);
+        npf_snprintf(temp, bufSize, "MAX%s", strDecimalPaddingString);
     }
     else
     {
@@ -696,17 +696,17 @@ const char* refCntWtd2str(weight_t refCntWtd, bool padForDecimalPlaces)
         //
         if (isLarge || isSmall)
         {
-            sprintf_s(temp, bufSize, "%.2g", scaledWeight);
+            npf_snprintf(temp, bufSize, "%.2g", scaledWeight);
         }
         else
         {
             if (intPart == scaledWeight)
             {
-                sprintf_s(temp, bufSize, "%lld%s", (long long)intPart, strDecimalPaddingString);
+                npf_snprintf(temp, bufSize, "%lld%s", (long long)intPart, strDecimalPaddingString);
             }
             else
             {
-                sprintf_s(temp, bufSize, "%.2f", scaledWeight);
+                npf_snprintf(temp, bufSize, "%.2f", scaledWeight);
             }
         }
     }
@@ -1474,7 +1474,7 @@ int SimpleSprintf_s(_In_reads_(cbBufSize - (pWriteStart - pBufStart)) char* pWri
     size_t  cbSpaceLeft = (size_t)((pBufStart + cbBufSize) - pWriteStart);
     va_list args;
     va_start(args, fmt);
-    ret = vsprintf_s(pWriteStart, cbSpaceLeft, const_cast<char*>(fmt), args);
+    ret = npf_vsnprintf(pWriteStart, cbSpaceLeft, const_cast<char*>(fmt), args);
     va_end(args);
     if (ret < 0)
     {

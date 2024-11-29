@@ -5870,7 +5870,7 @@ GenTree* Compiler::impCastClassOrIsInstToTree(GenTree*                op1,
         {                                                                                                              \
             const int cchAssertImpBuf = 600;                                                                           \
             char*     assertImpBuf    = (char*)_alloca(cchAssertImpBuf);                                               \
-            _snprintf_s(assertImpBuf, cchAssertImpBuf, cchAssertImpBuf - 1,                                            \
+            npf_snprintf(assertImpBuf, cchAssertImpBuf - 1,                                                            \
                         "%s : Possibly bad IL with CEE_%s at offset %04Xh (op1=%s op2=%s stkDepth=%d)", #cond,         \
                         impCurOpcName, impCurOpcOffs, op1 ? varTypeName(op1->TypeGet()) : "NULL",                      \
                         op2 ? varTypeName(op2->TypeGet()) : "NULL", stackState.esStackDepth);                          \
@@ -11841,7 +11841,7 @@ void Compiler::impImportBlockPending(BasicBlock* block)
         {
 #ifdef DEBUG
             char buffer[400];
-            sprintf_s(buffer, sizeof(buffer),
+            npf_snprintf(buffer, sizeof(buffer),
                       "Block at offset %4.4x to %4.4x in %0.200s entered with different stack depths.\n"
                       "Previous depth was %d, current depth is %d",
                       block->bbCodeOffs, block->bbCodeOffsEnd, info.compFullName, block->bbStkDepth,

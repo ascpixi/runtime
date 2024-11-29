@@ -10528,7 +10528,7 @@ void LinearScan::lsraGetOperandString(GenTree*          tree,
     {
         case LinearScan::LSRA_DUMP_PRE:
         case LinearScan::LSRA_DUMP_REFPOS:
-            _snprintf_s(operandString, operandStringLength, operandStringLength, "t%d%s", tree->gtTreeID, lastUseChar);
+            npf_snprintf(operandString, operandStringLength, "t%d%s", tree->gtTreeID, lastUseChar);
             break;
         case LinearScan::LSRA_DUMP_POST:
         {
@@ -10536,11 +10536,11 @@ void LinearScan::lsraGetOperandString(GenTree*          tree,
 
             if (!tree->gtHasReg(compiler))
             {
-                _snprintf_s(operandString, operandStringLength, operandStringLength, "STK%s", lastUseChar);
+                npf_snprintf(operandString, operandStringLength, "STK%s", lastUseChar);
             }
             else
             {
-                int charCount = _snprintf_s(operandString, operandStringLength, operandStringLength, "%s%s",
+                int charCount = npf_snprintf(operandString, operandStringLength, "%s%s",
                                             getRegName(tree->GetRegNum()), lastUseChar);
                 operandString += charCount;
                 operandStringLength -= charCount;
@@ -10550,7 +10550,7 @@ void LinearScan::lsraGetOperandString(GenTree*          tree,
                     unsigned regCount = tree->GetMultiRegCount(compiler);
                     for (unsigned regIndex = 1; regIndex < regCount; regIndex++)
                     {
-                        charCount = _snprintf_s(operandString, operandStringLength, operandStringLength, ",%s%s",
+                        charCount = npf_snprintf(operandString, operandStringLength, ",%s%s",
                                                 getRegName(tree->GetRegByIndex(regIndex)), lastUseChar);
                         operandString += charCount;
                         operandStringLength -= charCount;

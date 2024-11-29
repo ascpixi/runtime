@@ -10987,11 +10987,11 @@ void Compiler::gtDispNodeName(GenTree* tree)
 
     if (tree->IsIconHandle())
     {
-        sprintf_s(bufp, sizeof(buf), " %s(h)%c", name, 0);
+        npf_snprintf(bufp, sizeof(buf), " %s(h)%c", name, 0);
     }
     else if (tree->gtOper == GT_PUTARG_STK)
     {
-        sprintf_s(bufp, sizeof(buf), " %s [+0x%02x]%c", name, tree->AsPutArgStk()->getArgOffset(), 0);
+        npf_snprintf(bufp, sizeof(buf), " %s [+0x%02x]%c", name, tree->AsPutArgStk()->getArgOffset(), 0);
     }
     else if (tree->gtOper == GT_CALL)
     {
@@ -11057,7 +11057,7 @@ void Compiler::gtDispNodeName(GenTree* tree)
             gtfType = gtfTypeBuf;
         }
 
-        sprintf_s(bufp, sizeof(buf), " %s%s%s%c", callType, ctType, gtfType, 0);
+        npf_snprintf(bufp, sizeof(buf), " %s%s%s%c", callType, ctType, gtfType, 0);
     }
     else if (tree->gtOper == GT_ARR_ELEM)
     {
@@ -11097,10 +11097,10 @@ void Compiler::gtDispNodeName(GenTree* tree)
                 break;
             }
             case SCK_ARG_EXCPN:
-                sprintf_s(bufp, sizeof(buf), " %s_Arg", name);
+                npf_snprintf(bufp, sizeof(buf), " %s_Arg", name);
                 break;
             case SCK_ARG_RNG_EXCPN:
-                sprintf_s(bufp, sizeof(buf), " %s_ArgRng", name);
+                npf_snprintf(bufp, sizeof(buf), " %s_ArgRng", name);
                 break;
             default:
                 unreached();
@@ -11108,11 +11108,11 @@ void Compiler::gtDispNodeName(GenTree* tree)
     }
     else if (tree->gtOverflowEx())
     {
-        sprintf_s(bufp, sizeof(buf), " %s_ovfl%c", name, 0);
+        npf_snprintf(bufp, sizeof(buf), " %s_ovfl%c", name, 0);
     }
     else
     {
-        sprintf_s(bufp, sizeof(buf), " %s%c", name, 0);
+        npf_snprintf(bufp, sizeof(buf), " %s%c", name, 0);
     }
 
     if (strlen(buf) < 10)
@@ -11502,7 +11502,7 @@ void Compiler::gtDispNode(GenTree* tree, IndentStack* indentStack, _In_ _In_opt_
         {
             const size_t bufLength = msgLength - 1;
             msg                    = reinterpret_cast<char*>(_alloca(bufLength * sizeof(char)));
-            sprintf_s(const_cast<char*>(msg), bufLength, "%c%d = %s", tree->IsUnusedValue() ? 'u' : 't', tree->gtTreeID,
+            npf_snprintf(const_cast<char*>(msg), bufLength, "%c%d = %s", tree->IsUnusedValue() ? 'u' : 't', tree->gtTreeID,
                       hasOperands ? "" : " ");
         }
     }
@@ -11881,7 +11881,7 @@ int Compiler::gtGetLclVarName(unsigned lclNum, char* buf, unsigned buf_remaining
     unsigned charsPrinted = 0;
     int      sprintf_result;
 
-    sprintf_result = sprintf_s(bufp_next, buf_remaining, "V%02u", lclNum);
+    sprintf_result = npf_snprintf(bufp_next, buf_remaining, "V%02u", lclNum);
 
     if (sprintf_result < 0)
     {
@@ -11900,7 +11900,7 @@ int Compiler::gtGetLclVarName(unsigned lclNum, char* buf, unsigned buf_remaining
 
     if (ilName != nullptr)
     {
-        sprintf_result = sprintf_s(bufp_next, buf_remaining, " %s", ilName);
+        sprintf_result = npf_snprintf(bufp_next, buf_remaining, " %s", ilName);
         if (sprintf_result < 0)
         {
             return sprintf_result;
@@ -11911,7 +11911,7 @@ int Compiler::gtGetLclVarName(unsigned lclNum, char* buf, unsigned buf_remaining
     }
     else if (ilKind != nullptr)
     {
-        sprintf_result = sprintf_s(bufp_next, buf_remaining, " %s%d", ilKind, ilNum);
+        sprintf_result = npf_snprintf(bufp_next, buf_remaining, " %s%d", ilKind, ilNum);
         if (sprintf_result < 0)
         {
             return sprintf_result;
@@ -12970,7 +12970,7 @@ void Compiler::gtDispTree(GenTree*                    tree,
                 for (GenTreeFieldList::Use& use : tree->AsFieldList()->Uses())
                 {
                     char offset[32];
-                    sprintf_s(offset, sizeof(offset), "ofs %u", use.GetOffset());
+                    npf_snprintf(offset, sizeof(offset), "ofs %u", use.GetOffset());
                     gtDispChild(use.GetNode(), indentStack, (use.GetNext() == nullptr) ? IIArcBottom : IIArc, offset);
                 }
             }
@@ -12984,7 +12984,7 @@ void Compiler::gtDispTree(GenTree*                    tree,
                 for (GenTreePhi::Use& use : tree->AsPhi()->Uses())
                 {
                     char block[32];
-                    sprintf_s(block, sizeof(block), "pred " FMT_BB, use.GetNode()->AsPhiArg()->gtPredBB->bbNum);
+                    npf_snprintf(block, sizeof(block), "pred " FMT_BB, use.GetNode()->AsPhiArg()->gtPredBB->bbNum);
                     gtDispChild(use.GetNode(), indentStack, (use.GetNext() == nullptr) ? IIArcBottom : IIArc, block);
                 }
             }
@@ -13197,12 +13197,12 @@ void Compiler::gtPrintArgPrefix(GenTreeCall* call, CallArg* arg, char** bufp, un
     const char* wellKnownName = gtGetWellKnownArgNameForArgMsg(arg->GetWellKnownArg());
     if (wellKnownName != nullptr)
     {
-        prefLen = sprintf_s(*bufp, *bufLength, "%s", wellKnownName);
+        prefLen = npf_snprintf(*bufp, *bufLength, "%s", wellKnownName);
     }
     else
     {
         unsigned argNum = call->gtArgs.GetIndex(arg);
-        prefLen         = sprintf_s(*bufp, *bufLength, "arg%u", argNum);
+        prefLen         = npf_snprintf(*bufp, *bufLength, "arg%u", argNum);
     }
     assert(prefLen != -1);
     *bufp += prefLen;
@@ -13227,7 +13227,7 @@ void Compiler::gtGetArgMsg(GenTreeCall* call, CallArg* arg, char* bufp, unsigned
 
     if (arg->GetLateNode() != nullptr)
     {
-        sprintf_s(bufp, bufLength, " setup");
+        npf_snprintf(bufp, bufLength, " setup");
     }
     else if (call->gtArgs.IsAbiInformationDetermined())
     {
@@ -13237,7 +13237,7 @@ void Compiler::gtGetArgMsg(GenTreeCall* call, CallArg* arg, char* bufp, unsigned
             regNumber firstReg = arg->AbiInfo.GetRegNum();
             if (arg->AbiInfo.NumRegs == 1)
             {
-                sprintf_s(bufp, bufLength, " %s out+%02x", compRegVarName(firstReg), arg->AbiInfo.ByteOffset);
+                npf_snprintf(bufp, bufLength, " %s out+%02x", compRegVarName(firstReg), arg->AbiInfo.ByteOffset);
             }
             else
             {
@@ -13254,7 +13254,7 @@ void Compiler::gtGetArgMsg(GenTreeCall* call, CallArg* arg, char* bufp, unsigned
                         genMapIntRegNumToRegArgNum(firstReg, call->GetUnmanagedCallConv()) + arg->AbiInfo.NumRegs - 1;
                     lastReg = genMapIntRegArgNumToRegNum(lastRegNum, call->GetUnmanagedCallConv());
                 }
-                sprintf_s(bufp, bufLength, " %s%c%s out+%02x", compRegVarName(firstReg), separator,
+                npf_snprintf(bufp, bufLength, " %s%c%s out+%02x", compRegVarName(firstReg), separator,
                           compRegVarName(lastReg), arg->AbiInfo.ByteOffset);
             }
 
@@ -13262,9 +13262,9 @@ void Compiler::gtGetArgMsg(GenTreeCall* call, CallArg* arg, char* bufp, unsigned
         }
 #endif // TARGET_ARM
 #if FEATURE_FIXED_OUT_ARGS
-        sprintf_s(bufp, bufLength, " out+%02x", arg->AbiInfo.ByteOffset);
+        npf_snprintf(bufp, bufLength, " out+%02x", arg->AbiInfo.ByteOffset);
 #else
-        sprintf_s(bufp, bufLength, " on STK");
+        npf_snprintf(bufp, bufLength, " on STK");
 #endif
     }
 }
@@ -13291,7 +13291,7 @@ void Compiler::gtGetLateArgMsg(GenTreeCall* call, CallArg* arg, char* bufp, unsi
 #if FEATURE_FIXED_OUT_ARGS
     if (argReg == REG_STK)
     {
-        sprintf_s(bufp, bufLength, " in out+%02x", arg->AbiInfo.ByteOffset);
+        npf_snprintf(bufp, bufLength, " in out+%02x", arg->AbiInfo.ByteOffset);
     }
     else
 #endif
@@ -13302,7 +13302,7 @@ void Compiler::gtGetLateArgMsg(GenTreeCall* call, CallArg* arg, char* bufp, unsi
             regNumber firstReg = arg->AbiInfo.GetRegNum();
             if (arg->AbiInfo.NumRegs == 1)
             {
-                sprintf_s(bufp, bufLength, " %s out+%02x", compRegVarName(firstReg), arg->AbiInfo.ByteOffset);
+                npf_snprintf(bufp, bufLength, " %s out+%02x", compRegVarName(firstReg), arg->AbiInfo.ByteOffset);
             }
             else
             {
@@ -13319,7 +13319,7 @@ void Compiler::gtGetLateArgMsg(GenTreeCall* call, CallArg* arg, char* bufp, unsi
                         genMapIntRegNumToRegArgNum(firstReg, call->GetUnmanagedCallConv()) + arg->AbiInfo.NumRegs - 1;
                     lastReg = genMapIntRegArgNumToRegNum(lastRegNum, call->GetUnmanagedCallConv());
                 }
-                sprintf_s(bufp, bufLength, " %s%c%s out+%02x", compRegVarName(firstReg), separator,
+                npf_snprintf(bufp, bufLength, " %s%c%s out+%02x", compRegVarName(firstReg), separator,
                           compRegVarName(lastReg), arg->AbiInfo.ByteOffset);
             }
 
@@ -13330,13 +13330,13 @@ void Compiler::gtGetLateArgMsg(GenTreeCall* call, CallArg* arg, char* bufp, unsi
         if (arg->AbiInfo.NumRegs >= 2)
         {
             char separator = (arg->AbiInfo.NumRegs == 2) ? ',' : '-';
-            sprintf_s(bufp, bufLength, " %s%c%s", compRegVarName(argReg), separator,
+            npf_snprintf(bufp, bufLength, " %s%c%s", compRegVarName(argReg), separator,
                       compRegVarName(arg->AbiInfo.GetRegNum(arg->AbiInfo.NumRegs - 1)));
         }
         else
 #endif
         {
-            sprintf_s(bufp, bufLength, " in %s", compRegVarName(argReg));
+            npf_snprintf(bufp, bufLength, " in %s", compRegVarName(argReg));
         }
     }
 }

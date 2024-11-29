@@ -2115,7 +2115,7 @@ const char* Compiler::compRegVarName(regNumber reg, bool displayVar, bool isFloa
             static int index = 0;                               // for circular index into the name array
 
             index ^= 1; // circular reuse of index
-            sprintf_s(nameVarReg[index], NAME_VAR_REG_BUFFER_LEN, "%s'%s'", getRegName(reg), VarNameToStr(varName));
+            npf_snprintf(nameVarReg[index], NAME_VAR_REG_BUFFER_LEN, "%s'%s'", getRegName(reg), VarNameToStr(varName));
 
             return nameVarReg[index];
         }
@@ -5234,7 +5234,7 @@ void Compiler::compCompile(void** methodCodePtr, uint32_t* methodCodeSize, JitFl
         if (opts.IsOSR())
         {
             // Tiering name already includes "OSR", we just want the IL offset
-            sprintf_s(osrBuffer, 20, " @0x%x", info.compILEntry);
+            npf_snprintf(osrBuffer, 20, " @0x%x", info.compILEntry);
         }
 
 #ifdef DEBUG
@@ -5245,13 +5245,13 @@ void Compiler::compCompile(void** methodCodePtr, uint32_t* methodCodeSize, JitFl
 #endif
 
         char debugPart[128] = {0};
-        INDEBUG(sprintf_s(debugPart, 128, ", hash=0x%08x%s", info.compMethodHash(), compGetStressMessage()));
+        INDEBUG(npf_snprintf(debugPart, 128, ", hash=0x%08x%s", info.compMethodHash(), compGetStressMessage()));
 
         char metricPart[128] = {0};
 #ifdef DEBUG
         if (JitConfig.JitMetrics() > 0)
         {
-            sprintf_s(metricPart, 128, ", perfScore=%.2f, numCse=%u", Metrics.PerfScore, optCSEcount);
+            npf_snprintf(metricPart, 128, ", perfScore=%.2f, numCse=%u", Metrics.PerfScore, optCSEcount);
         }
 #endif
 
@@ -10732,7 +10732,7 @@ const char* Compiler::printfAlloc(const char* format, ...)
     char    str[512];
     va_list args;
     va_start(args, format);
-    int result = vsprintf_s(str, ArrLen(str), format, args);
+    int result = npf_vsnprintf(str, ArrLen(str), format, args);
     va_end(args);
     assert((result >= 0) && ((unsigned)result < ArrLen(str)));
 

@@ -556,12 +556,13 @@ FILE* Compiler::fgOpenFlowGraphFile(bool* wbDontClose, Phases phase, PhasePositi
 
         if (pathname != nullptr)
         {
-            sprintf_s((char*)filename, charCount, "%s\\" FILENAME_PATTERN, pathname, escapedString, phasePositionString,
+            npf_snprintf((char*)filename, charCount, "%s\\" FILENAME_PATTERN, pathname, escapedString,
+                         phasePositionString,
                       phaseName, tierName, type);
         }
         else
         {
-            sprintf_s((char*)filename, charCount, FILENAME_PATTERN, escapedString, phasePositionString, phaseName,
+            npf_snprintf((char*)filename, charCount, FILENAME_PATTERN, escapedString, phasePositionString, phaseName,
                       tierName, type);
         }
         fgxFile = fopen_utf8(filename, "wx"); // Open the file for writing only only if it doesn't already exist
@@ -572,12 +573,13 @@ FILE* Compiler::fgOpenFlowGraphFile(bool* wbDontClose, Phases phase, PhasePositi
             {
                 if (pathname != nullptr)
                 {
-                    sprintf_s((char*)filename, charCount, "%s\\" FILENAME_PATTERN_WITH_NUMBER, pathname, escapedString,
+                    npf_snprintf((char*)filename, charCount, "%s\\" FILENAME_PATTERN_WITH_NUMBER, pathname,
+                                 escapedString,
                               phasePositionString, phaseName, tierName, i, type);
                 }
                 else
                 {
-                    sprintf_s((char*)filename, charCount, FILENAME_PATTERN_WITH_NUMBER, escapedString,
+                    npf_snprintf((char*)filename, charCount, FILENAME_PATTERN_WITH_NUMBER, escapedString,
                               phasePositionString, phaseName, tierName, i, type);
                 }
                 fgxFile = fopen_utf8(filename, "wx"); // Open the file for writing only only if it doesn't already exist
@@ -615,11 +617,11 @@ FILE* Compiler::fgOpenFlowGraphFile(bool* wbDontClose, Phases phase, PhasePositi
         filename = (char*)_alloca(charCount * sizeof(char));
         if (pathname != nullptr)
         {
-            sprintf_s((char*)filename, charCount, "%s\\%s.%s", pathname, origFilename, type);
+            npf_snprintf((char*)filename, charCount, "%s\\%s.%s", pathname, origFilename, type);
         }
         else
         {
-            sprintf_s((char*)filename, charCount, "%s.%s", origFilename, type);
+            npf_snprintf((char*)filename, charCount, "%s.%s", origFilename, type);
         }
         fgxFile      = fopen_utf8(filename, "a+");
         *wbDontClose = false;
@@ -1610,7 +1612,7 @@ bool Compiler::fgDumpFlowGraph(Phases phase, PhasePosition pos)
                 EHblkDsc* ehDsc;
                 for (XTnum = 0, ehDsc = compHndBBtab; XTnum < compHndBBtabCount; XTnum++, ehDsc++)
                 {
-                    sprintf_s(name, sizeof(name), "EH#%u try", XTnum);
+                    npf_snprintf(name, sizeof(name), "EH#%u try", XTnum);
                     rgnGraph.Insert(name, RegionGraph::RegionType::EH, ehDsc->ebdTryBeg, ehDsc->ebdTryLast);
                     const char* handlerType = "";
                     switch (ehDsc->ebdHandlerType)
@@ -1631,11 +1633,11 @@ bool Compiler::fgDumpFlowGraph(Phases phase, PhasePosition pos)
                             handlerType = "fault-was-finally";
                             break;
                     }
-                    sprintf_s(name, sizeof(name), "EH#%u %s", XTnum, handlerType);
+                    npf_snprintf(name, sizeof(name), "EH#%u %s", XTnum, handlerType);
                     rgnGraph.Insert(name, RegionGraph::RegionType::EH, ehDsc->ebdHndBeg, ehDsc->ebdHndLast);
                     if (ehDsc->HasFilter())
                     {
-                        sprintf_s(name, sizeof(name), "EH#%u filter", XTnum);
+                        npf_snprintf(name, sizeof(name), "EH#%u filter", XTnum);
                         rgnGraph.Insert(name, RegionGraph::RegionType::EH, ehDsc->ebdFilter, ehDsc->ebdHndBeg->Prev());
                     }
                 }
@@ -1899,17 +1901,17 @@ void Compiler::fgTableDispBasicBlock(const BasicBlock* block,
         const BasicBlock* b = e->getDestinationBlock();
         if (b == nullptr)
         {
-            written = _snprintf_s(buffer, sizeOfBuffer, sizeOfBuffer, "NULL");
+            written = npf_snprintf(buffer, sizeOfBuffer, "NULL");
             printedBlockWidth += written;
         }
         else if (terseNext && (b == nextBlock))
         {
-            written = _snprintf_s(buffer, sizeOfBuffer, sizeOfBuffer, "*");
+            written = npf_snprintf(buffer, sizeOfBuffer, "*");
             printedBlockWidth += written;
         }
         else
         {
-            written = _snprintf_s(buffer, sizeOfBuffer, sizeOfBuffer, FMT_BB, b->bbNum);
+            written = npf_snprintf(buffer, sizeOfBuffer, FMT_BB, b->bbNum);
             printedBlockWidth += written;
         }
 
@@ -1917,7 +1919,7 @@ void Compiler::fgTableDispBasicBlock(const BasicBlock* block,
         {
             if (e->hasLikelihood())
             {
-                written = _snprintf_s(buffer + written, sizeOfBuffer - written, sizeOfBuffer - written,
+                written = npf_snprintf(buffer + written, sizeOfBuffer - written,
                                       "(" FMT_WT_NARROW ")", e->getLikelihood());
                 printedBlockWidth += written;
             }

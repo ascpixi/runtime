@@ -215,7 +215,7 @@ const char* CodeGen::genInsDisplayName(emitter::instrDesc* id)
                 }
             }
 
-            sprintf_s(buf[curBuf], TEMP_BUFFER_LEN, "v%s", insName);
+            npf_snprintf(buf[curBuf], TEMP_BUFFER_LEN, "v%s", insName);
             retbuf = buf[curBuf];
             curBuf = (curBuf + 1) % 4;
             return retbuf;

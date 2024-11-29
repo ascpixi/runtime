@@ -143,7 +143,7 @@ const char* emitter::emitIfName(unsigned f)
         return ifNames[f];
     }
 
-    sprintf_s(errBuff, sizeof(errBuff), "??%u??", f);
+    npf_snprintf(errBuff, sizeof(errBuff), "??%u??", f);
     return errBuff;
 }
 
