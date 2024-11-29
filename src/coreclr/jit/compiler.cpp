@@ -10538,17 +10538,63 @@ const char* Compiler::printfAlloc(const char* format, ...)
 //
 const char* Compiler::convertUtf16ToUtf8ForPrinting(const WCHAR* utf16String)
 {
-    const char* utf8Str = "<utf8 conversion failure>";
-    int         utf8Len = WideCharToMultiByte(CP_UTF8, 0, utf16String, -1, nullptr, 0, nullptr, nullptr);
-    if (utf8Len == 0)
-    {
-        char* allocated = new (this, CMK_DebugOnly) char[utf8Len];
+    static const char* errorMessage = "<utf8 conversion failure>";
 
-        if (WideCharToMultiByte(CP_UTF8, 0, (WCHAR*)utf16String, -1, allocated, utf8Len, nullptr, nullptr) != 0)
+    // Allocate space for the converted string.
+    // For simplicity, assume worst case: each UTF-16 code unit could map to 4 UTF-8 bytes.
+    size_t maxUtf8Len = 4 * 256; // Arbitrary, adjust as needed.
+    char*  utf8Str    = new char[maxUtf8Len];
+    if (!utf8Str)
+        return errorMessage;
+
+    size_t utf8Index = 0;
+    for (size_t i = 0; utf16String[i] != 0 && utf8Index < maxUtf8Len - 1; i++)
+    {
+        uint16_t ch = utf16String[i];
+
+        if (ch < 0x80)
         {
-            utf8Str = allocated;
+            // 1-byte UTF-8 (ASCII range).
+            utf8Str[utf8Index++] = ch & 0x7F;
+        }
+        else if (ch < 0x800)
+        {
+            // 2-byte UTF-8.
+            utf8Str[utf8Index++] = 0xC0 | ((ch >> 6) & 0x1F);
+            utf8Str[utf8Index++] = 0x80 | (ch & 0x3F);
+        }
+        else if (ch >= 0xD800 && ch <= 0xDBFF)
+        {
+            // Surrogate pair (high surrogate).
+            uint16_t highSurrogate = ch;
+            uint16_t lowSurrogate  = utf16String[++i];
+
+            if (lowSurrogate >= 0xDC00 && lowSurrogate <= 0xDFFF)
+            {
+                uint32_t codePoint = (((highSurrogate - 0xD800) << 10) | (lowSurrogate - 0xDC00)) + 0x10000;
+
+                utf8Str[utf8Index++] = 0xF0 | ((codePoint >> 18) & 0x07);
+                utf8Str[utf8Index++] = 0x80 | ((codePoint >> 12) & 0x3F);
+                utf8Str[utf8Index++] = 0x80 | ((codePoint >> 6) & 0x3F);
+                utf8Str[utf8Index++] = 0x80 | (codePoint & 0x3F);
+            }
+            else
+            {
+                // Invalid surrogate pair.
+                delete[] utf8Str;
+                return errorMessage;
+            }
+        }
+        else
+        {
+            // 3-byte UTF-8.
+            utf8Str[utf8Index++] = 0xE0 | ((ch >> 12) & 0x0F);
+            utf8Str[utf8Index++] = 0x80 | ((ch >> 6) & 0x3F);
+            utf8Str[utf8Index++] = 0x80 | (ch & 0x3F);
         }
     }
+
+    utf8Str[utf8Index] = '\0'; // Null-terminate.
 
     return utf8Str;
 }
