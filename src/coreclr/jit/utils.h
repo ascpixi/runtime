@@ -785,19 +785,19 @@ private:
     bool GetCycles(uint64_t* time);
 };
 
-// Uses win API QueryPerformanceCounter/QueryPerformanceFrequency.
-class PerfCounter
-{
-    LARGE_INTEGER beg;
-    double        freq;
-
-public:
-    // If the method returns false, any other query yield unpredictable results.
-    bool Start();
-
-    // Return time elapsed from start in millis, if Start returned true.
-    double ElapsedTime();
-};
+//// Uses win API QueryPerformanceCounter/QueryPerformanceFrequency.
+//class PerfCounter
+//{
+//    LARGE_INTEGER beg;
+//    double        freq;
+//
+//public:
+//    // If the method returns false, any other query yield unpredictable results.
+//    bool Start();
+//
+//    // Return time elapsed from start in millis, if Start returned true.
+//    double ElapsedTime();
+//};
 
 #endif // FEATURE_JIT_METHOD_PERF
 

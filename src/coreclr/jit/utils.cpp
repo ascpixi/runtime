@@ -2188,25 +2188,25 @@ double CycleCount::ElapsedTime()
     return ((double)(nowCycles - beginCycles) / cps) * 1000.0;
 }
 
-bool PerfCounter::Start()
-{
-    bool result = QueryPerformanceFrequency(&beg) != 0;
-    if (!result)
-    {
-        return result;
-    }
-    freq = (double)beg.QuadPart / 1000.0;
-    (void)QueryPerformanceCounter(&beg);
-    return result;
-}
-
-// Return elapsed time from Start() in millis.
-double PerfCounter::ElapsedTime()
-{
-    LARGE_INTEGER li;
-    (void)QueryPerformanceCounter(&li);
-    return (double)(li.QuadPart - beg.QuadPart) / freq;
-}
+//bool PerfCounter::Start()
+//{
+//    bool result = QueryPerformanceFrequency(&beg) != 0;
+//    if (!result)
+//    {
+//        return result;
+//    }
+//    freq = (double)beg.QuadPart / 1000.0;
+//    (void)QueryPerformanceCounter(&beg);
+//    return result;
+//}
+//
+//// Return elapsed time from Start() in millis.
+//double PerfCounter::ElapsedTime()
+//{
+//    LARGE_INTEGER li;
+//    (void)QueryPerformanceCounter(&li);
+//    return (double)(li.QuadPart - beg.QuadPart) / freq;
+//}
 
 #endif
 
