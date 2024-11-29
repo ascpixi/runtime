@@ -743,14 +743,14 @@ class InlineContext
 public:
 #if defined(DEBUG)
 
-    // Dump the full subtree, including failures
-    void Dump(bool verbose, unsigned indent = 0);
+    //// Dump the full subtree, including failures
+    //void Dump(bool verbose, unsigned indent = 0);
 
-    // Dump only the success subtree, with rich data
-    void DumpData(unsigned indent = 0);
+    //// Dump only the success subtree, with rich data
+    //void DumpData(unsigned indent = 0);
 
-    // Dump full subtree in xml format
-    void DumpXml(FILE* file = stderr, unsigned indent = 0);
+    //// Dump full subtree in xml format
+    //void DumpXml(FILE* file = stderr, unsigned indent = 0);
 #endif // defined(DEBUG)
 
     IL_OFFSET GetActualCallOffset()
@@ -1030,30 +1030,30 @@ public:
 
 #if defined(DEBUG)
 
-    // Dump textual description of inlines done so far.
-    void Dump(bool verbose);
+    //// Dump textual description of inlines done so far.
+    //void Dump(bool verbose);
 
-    // Dump data-format description of inlines done so far.
-    void DumpData();
-    void DumpDataEnsurePolicyIsSet();
-    void DumpDataHeader(FILE* file);
-    void DumpDataSchema(FILE* file);
-    void DumpDataContents(FILE* file);
+    //// Dump data-format description of inlines done so far.
+    //void DumpData();
+    //void DumpDataEnsurePolicyIsSet();
+    //void DumpDataHeader(FILE* file);
+    //void DumpDataSchema(FILE* file);
+    //void DumpDataContents(FILE* file);
 
-    // Dump xml-formatted description of inlines
-    void        DumpXml(FILE* file = stderr, unsigned indent = 0);
-    static void FinalizeXml(FILE* file = stderr);
+    //// Dump xml-formatted description of inlines
+    //void        DumpXml(FILE* file = stderr, unsigned indent = 0);
+    //static void FinalizeXml(FILE* file = stderr);
 
-    // Cache for file position of this method in the inline xml
-    long GetMethodXmlFilePosition()
-    {
-        return m_MethodXmlFilePosition;
-    }
+    //// Cache for file position of this method in the inline xml
+    //long GetMethodXmlFilePosition()
+    //{
+    //    return m_MethodXmlFilePosition;
+    //}
 
-    void SetMethodXmlFilePosition(long val)
-    {
-        m_MethodXmlFilePosition = val;
-    }
+    //void SetMethodXmlFilePosition(long val)
+    //{
+    //    m_MethodXmlFilePosition = val;
+    //}
 
     // Set up or access random state (for use by RandomPolicy)
     CLRRandom* GetRandom(int optionalSeed = 0);

@@ -1766,7 +1766,6 @@ class JitTimer
     CompTimeInfo m_info; // The CompTimeInfo for this compilation.
 
     static CritSecObject s_csvLock; // Lock to protect the time log file.
-    static FILE*         s_csvFile; // The time log file handle.
     void PrintCsvMethodStats(Compiler* comp);
 
 private:
@@ -1783,8 +1782,6 @@ public:
     {
         return ::new (comp, CMK_Unknown) JitTimer(byteCodeSize);
     }
-
-    static void PrintCsvHeader();
 
     // Ends the current phase (argument is for a redundant check).
     void EndPhase(Compiler* compiler, Phases phase);

@@ -1551,23 +1551,6 @@ void Compiler::compShutdown()
 
     emitter::emitDone();
 
-#if defined(DEBUG)
-    // Finish reading and/or writing inline xml
-    if (JitConfig.JitInlineDumpXmlFile() != nullptr)
-    {
-        FILE* file = fopen_utf8(JitConfig.JitInlineDumpXmlFile(), "a");
-        if (file != nullptr)
-        {
-            InlineStrategy::FinalizeXml(file);
-            fclose(file);
-        }
-        else
-        {
-            InlineStrategy::FinalizeXml();
-        }
-    }
-#endif // defined(DEBUG)
-
 #if defined(DEBUG) || MEASURE_NODE_SIZE || MEASURE_BLOCK_SIZE || DISPLAY_SIZES || CALL_ARG_STATS
     if (genMethodCnt == 0)
     {
@@ -5958,10 +5941,6 @@ int Compiler::compCompile(CORINFO_MODULE_HANDLE classPtr,
     if (!checkedForJitTimeLog)
     {
         InterlockedCompareExchangeT(&Compiler::compJitTimeLogFilename, JitConfig.JitTimeLogFile(), NULL);
-
-        // At a process or module boundary clear the file and start afresh.
-        JitTimer::PrintCsvHeader();
-
         checkedForJitTimeLog = true;
     }
     if ((Compiler::compJitTimeLogFilename != nullptr) || (JitTimeLogCsv() != nullptr))
@@ -6503,25 +6482,25 @@ void Compiler::compCompileFinish()
 
 #if defined(DEBUG)
 
-    m_inlineStrategy->DumpData();
+    //m_inlineStrategy->DumpData();
 
-    if (JitConfig.JitInlineDumpXmlFile() != nullptr)
-    {
-        FILE* file = fopen_utf8(JitConfig.JitInlineDumpXmlFile(), "a");
-        if (file != nullptr)
-        {
-            m_inlineStrategy->DumpXml(file);
-            fclose(file);
-        }
-        else
-        {
-            m_inlineStrategy->DumpXml();
-        }
-    }
-    else
-    {
-        m_inlineStrategy->DumpXml();
-    }
+    //if (JitConfig.JitInlineDumpXmlFile() != nullptr)
+    //{
+    //    FILE* file = fopen_utf8(JitConfig.JitInlineDumpXmlFile(), "a");
+    //    if (file != nullptr)
+    //    {
+    //        m_inlineStrategy->DumpXml(file);
+    //        fclose(file);
+    //    }
+    //    else
+    //    {
+    //        m_inlineStrategy->DumpXml();
+    //    }
+    //}
+    //else
+    //{
+    //    m_inlineStrategy->DumpXml();
+    //}
 
 #endif
 
@@ -9058,163 +9037,11 @@ void JitTimer::CLRApiCallLeave(unsigned apix)
 
 CritSecObject JitTimer::s_csvLock;
 
-// It's expensive to constantly open and close the file, so open it once and close it
-// when the process exits. This should be accessed under the s_csvLock.
-FILE* JitTimer::s_csvFile = nullptr;
-
-const char* Compiler::JitTimeLogCsv()
-{
-    const char* jitTimeLogCsv = JitConfig.JitTimeLogCsv();
-    return jitTimeLogCsv;
-}
-
-void JitTimer::PrintCsvHeader()
-{
-    const char* jitTimeLogCsv = Compiler::JitTimeLogCsv();
-    if (jitTimeLogCsv == nullptr)
-    {
-        return;
-    }
-
-    CritSecHolder csvLock(s_csvLock);
-
-    if (s_csvFile == nullptr)
-    {
-        s_csvFile = fopen_utf8(jitTimeLogCsv, "a");
-    }
-    if (s_csvFile != nullptr)
-    {
-        // Seek to the end of the file s.t. `ftell` doesn't lie to us on Windows
-        fseek(s_csvFile, 0, SEEK_END);
-
-        // Write the header if the file is empty
-        if (ftell(s_csvFile) == 0)
-        {
-            fprintf(s_csvFile, "\"Method Name\",");
-            fprintf(s_csvFile, "\"Assembly or SPMI Index\",");
-            fprintf(s_csvFile, "\"IL Bytes\",");
-            fprintf(s_csvFile, "\"Basic Blocks\",");
-            fprintf(s_csvFile, "\"Min Opts\",");
-            fprintf(s_csvFile, "\"Loops\",");
-            fprintf(s_csvFile, "\"Loops Cloned\",");
-#if FEATURE_LOOP_ALIGN
-#ifdef DEBUG
-            fprintf(s_csvFile, "\"Alignment Candidates\",");
-            fprintf(s_csvFile, "\"Loops Aligned\",");
-#endif // DEBUG
-#endif // FEATURE_LOOP_ALIGN
-            for (int i = 0; i < PHASE_NUMBER_OF; i++)
-            {
-                fprintf(s_csvFile, "\"%s\",", PhaseNames[i]);
-                if ((JitConfig.JitMeasureIR() != 0) && PhaseReportsIRSize[i])
-                {
-                    fprintf(s_csvFile, "\"Node Count After %s\",", PhaseNames[i]);
-                }
-            }
-
-            InlineStrategy::DumpCsvHeader(s_csvFile);
-
-            fprintf(s_csvFile, "\"Executable Code Bytes\",");
-            fprintf(s_csvFile, "\"GC Info Bytes\",");
-            fprintf(s_csvFile, "\"Total Bytes Allocated\",");
-            fprintf(s_csvFile, "\"Total Cycles\",");
-            fprintf(s_csvFile, "\"CPS\"\n");
-
-            fflush(s_csvFile);
-        }
-    }
-}
-
-void JitTimer::PrintCsvMethodStats(Compiler* comp)
-{
-    const char* jitTimeLogCsv = Compiler::JitTimeLogCsv();
-    if (jitTimeLogCsv == nullptr)
-    {
-        return;
-    }
-
-// eeGetMethodFullName uses locks, so don't enter crit sec before this call.
-#if defined(DEBUG) || defined(LATE_DISASM)
-    // If we already have computed the name because for some reason we're generating the CSV
-    // for a DEBUG build (presumably not for the time info), just re-use it.
-    const char* methName = comp->info.compFullName;
-#else
-    const char* methName = comp->eeGetMethodFullName(comp->info.compMethodHnd);
-#endif
-
-    // Try and access the SPMI index to report in the data set.
-    //
-    // If the jit is not hosted under SPMI this will return the
-    // default value of zero.
-    //
-    // Query the jit host directly here instead of going via the
-    // config cache, since value will change for each method.
-    int index = g_jitHost->getIntConfigValue("SuperPMIMethodContextNumber", -1);
-
-    CritSecHolder csvLock(s_csvLock);
-
-    if (s_csvFile == nullptr)
-    {
-        return;
-    }
-
-    fprintf(s_csvFile, "\"%s\",", methName);
-    if (index != 0)
-    {
-        fprintf(s_csvFile, "%d,", index);
-    }
-    else
-    {
-        const char* methodAssemblyName = comp->eeGetClassAssemblyName(comp->info.compClassHnd);
-        fprintf(s_csvFile, "\"%s\",", methodAssemblyName);
-    }
-    fprintf(s_csvFile, "%u,", comp->info.compILCodeSize);
-    fprintf(s_csvFile, "%u,", comp->fgBBcount);
-    fprintf(s_csvFile, "%u,", comp->opts.MinOpts());
-    fprintf(s_csvFile, "%d,", comp->Metrics.LoopsFoundDuringOpts);
-    fprintf(s_csvFile, "%d,", comp->Metrics.LoopsCloned);
-#if FEATURE_LOOP_ALIGN
-#ifdef DEBUG
-    fprintf(s_csvFile, "%d,", comp->Metrics.LoopAlignmentCandidates);
-    fprintf(s_csvFile, "%d,", comp->Metrics.LoopsAligned);
-#endif // DEBUG
-#endif // FEATURE_LOOP_ALIGN
-    uint64_t totCycles = 0;
-    for (int i = 0; i < PHASE_NUMBER_OF; i++)
-    {
-        if (!PhaseHasChildren[i])
-        {
-            totCycles += m_info.m_cyclesByPhase[i];
-        }
-        fprintf(s_csvFile, "%llu,", (unsigned long long)m_info.m_cyclesByPhase[i]);
-
-        if ((JitConfig.JitMeasureIR() != 0) && PhaseReportsIRSize[i])
-        {
-            fprintf(s_csvFile, "%u,", m_info.m_nodeCountAfterPhase[i]);
-        }
-    }
-
-    comp->m_inlineStrategy->DumpCsvData(s_csvFile);
-
-    fprintf(s_csvFile, "%u,", comp->info.compNativeCodeSize);
-    fprintf(s_csvFile, "%zu,", comp->compInfoBlkSize);
-    fprintf(s_csvFile, "%zu,", comp->compGetArenaAllocator()->getTotalBytesAllocated());
-    fprintf(s_csvFile, "%llu,", (unsigned long long)m_info.m_totalCycles);
-    fprintf(s_csvFile, "%f\n", CachedCyclesPerSecond());
-
-    fflush(s_csvFile);
-}
-
 // Perform process shutdown actions.
 //
 // static
 void JitTimer::Shutdown()
 {
-    CritSecHolder csvLock(s_csvLock);
-    if (s_csvFile != nullptr)
-    {
-        fclose(s_csvFile);
-    }
 }
 
 // Completes the timing of the current method, and adds it to "sum".
@@ -9304,12 +9131,12 @@ void Compiler::RecordStateAtEndOfInlining()
 
     m_compCyclesAtEndOfInlining    = 0;
     m_compTickCountAtEndOfInlining = 0;
-    bool b                         = CycleTimer::GetThreadCyclesS(&m_compCyclesAtEndOfInlining);
-    if (!b)
-    {
-        return; // We don't have a thread cycle counter.
-    }
-    m_compTickCountAtEndOfInlining = GetTickCount();
+    //bool b                         = CycleTimer::GetThreadCyclesS(&m_compCyclesAtEndOfInlining);
+    //if (!b)
+    //{
+    //    return; // We don't have a thread cycle counter.
+    //}
+    //m_compTickCountAtEndOfInlining = GetTickCount();
 
 #endif // defined(DEBUG)
 }
@@ -9325,14 +9152,14 @@ void Compiler::RecordStateAtEndOfCompilation()
     // Common portion
     m_compCycles = 0;
     uint64_t compCyclesAtEnd;
-    bool     b = CycleTimer::GetThreadCyclesS(&compCyclesAtEnd);
-    if (!b)
-    {
-        return; // We don't have a thread cycle counter.
-    }
-    assert(compCyclesAtEnd >= m_compCyclesAtEndOfInlining);
+    //bool     b = CycleTimer::GetThreadCyclesS(&compCyclesAtEnd);
+    //if (!b)
+    //{
+    //    return; // We don't have a thread cycle counter.
+    //}
+    //assert(compCyclesAtEnd >= m_compCyclesAtEndOfInlining);
 
-    m_compCycles = compCyclesAtEnd - m_compCyclesAtEndOfInlining;
+    //m_compCycles = compCyclesAtEnd - m_compCyclesAtEndOfInlining;
 
 #endif // defined(DEBUG)
 }

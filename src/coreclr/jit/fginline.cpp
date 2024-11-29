@@ -904,13 +904,6 @@ PhaseStatus Compiler::fgInline()
 
     fgVerifyHandlerTab();
 
-    if (verbose || fgPrintInlinedMethods)
-    {
-        JITDUMP("**************** Inline Tree");
-        printf("\n");
-        m_inlineStrategy->Dump(verbose || JitConfig.JitPrintInlinedMethodsVerbose());
-    }
-
 #endif // DEBUG
 
     if (fgPgoConsistent)

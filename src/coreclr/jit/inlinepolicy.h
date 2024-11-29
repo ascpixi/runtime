@@ -513,54 +513,6 @@ public:
     }
 };
 
-// The ReplayPolicy performs only inlines specified by an external
-// inline replay log.
-
-class ReplayPolicy : public DiscretionaryPolicy
-{
-public:
-    // Construct a ReplayPolicy
-    ReplayPolicy(Compiler* compiler, bool isPrejitRoot);
-
-    // Policy observations
-    void NoteBool(InlineObservation obs, bool value) override;
-
-    // Optional observations
-    void NoteContext(InlineContext* context) override
-    {
-        m_InlineContext = context;
-    }
-
-    void NoteOffset(IL_OFFSET offset) override
-    {
-        m_Offset = offset;
-    }
-
-    // Policy determinations
-    void DetermineProfitability(CORINFO_METHOD_INFO* methodInfo) override;
-
-    // Miscellaneous
-    const char* GetName() const override
-    {
-        return "ReplayPolicy";
-    }
-
-    static void FinalizeXml();
-
-private:
-    bool FindMethod();
-    bool FindContext(InlineContext* context);
-    bool FindInline(CORINFO_METHOD_HANDLE callee);
-    bool FindInline(unsigned token, unsigned hash, unsigned offset);
-
-    static bool          s_WroteReplayBanner;
-    static FILE*         s_ReplayFile;
-    static CritSecObject s_XmlReaderLock;
-    InlineContext*       m_InlineContext;
-    IL_OFFSET            m_Offset;
-    bool                 m_WasForceInline;
-};
-
 #endif // defined(DEBUG)
 
 #endif // _INLINE_POLICY_H_
