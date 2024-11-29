@@ -6351,7 +6351,7 @@ int Compiler::compCompile(CORINFO_MODULE_HANDLE classPtr,
     auto pParam = &param;
 
     //setErrorTrap(info.compCompHnd, Param*, pParam, &param) // ERROR TRAP: Start normal block
-    TRY
+    GUARD
     {
         pParam->result =
             pParam->pThis->compCompileHelper(pParam->classPtr, pParam->compHnd, pParam->methodInfo,
@@ -7778,15 +7778,13 @@ START:
 #endif
     param.result = result;
 
-    auto pParamOuter = &param;
-
     // clang-format off
     //setErrorTrap(compHnd, Param*, pParamOuter, &param)
-    TRY
+    TRY (&param, Param*, pParamOuter)
     {
-        auto pParam = pParamOuter;
         //setErrorTrap(nullptr, Param*, pParam, pParamOuter)
-        TRY
+        auto pParam = pParamOuter;
+        GUARD
         {
             void* compilerMem;
             if (pParam->inlineInfo)
@@ -7858,16 +7856,16 @@ START:
         //endErrorTrap()
     }
     //impJitErrorTrap()
-    CATCH (int __errc)
+    CATCH (__errc, Param*, pParamOuter)
     {
         // If we were looking at an inlinee....
-        if (inlineInfo != nullptr)
+        if (pParamOuter->inlineInfo != nullptr)
         {
             // Note that we failed to compile the inlinee, and that
             // there's no point trying to inline it again anywhere else.
-            inlineInfo->inlineResult->NoteFatal(InlineObservation::CALLEE_COMPILATION_ERROR);
+            pParamOuter->inlineInfo->inlineResult->NoteFatal(InlineObservation::CALLEE_COMPILATION_ERROR);
         }
-        param.result = __errc;
+        pParamOuter->result = __errc;
     } END_CATCH;
     //endErrorTrap()
     // clang-format on
