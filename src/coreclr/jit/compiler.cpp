@@ -44,7 +44,7 @@ AssemblyNamesList2* Compiler::s_pJitDisasmIncludeAssembliesList            = nul
 
 // static
 bool       Compiler::s_pJitFunctionFileInitialized = false;
-MethodSet* Compiler::s_pJitMethodSet               = nullptr;
+//MethodSet* Compiler::s_pJitMethodSet               = nullptr;
 #endif // DEBUG
 
 #ifdef CONFIGURABLE_ARM_ABI
@@ -1411,20 +1411,20 @@ void DisplayNowayAssertMap()
     {
         FILE* fout;
 
-        const char* strJitMeasureNowayAssertFile = JitConfig.JitMeasureNowayAssertFile();
-        if (strJitMeasureNowayAssertFile != nullptr)
-        {
-            fout = fopen_utf8(strJitMeasureNowayAssertFile, "a");
-            if (fout == nullptr)
-            {
-                fprintf(jitstdout(), "Failed to open JitMeasureNowayAssertFile \"%s\"\n", strJitMeasureNowayAssertFile);
-                return;
-            }
-        }
-        else
-        {
+        //const char* strJitMeasureNowayAssertFile = JitConfig.JitMeasureNowayAssertFile();
+        //if (strJitMeasureNowayAssertFile != nullptr)
+        //{
+        //    fout = fopen_utf8(strJitMeasureNowayAssertFile, "a");
+        //    if (fout == nullptr)
+        //    {
+        //        fprintf(jitstdout(), "Failed to open JitMeasureNowayAssertFile \"%s\"\n", strJitMeasureNowayAssertFile);
+        //        return;
+        //    }
+        //}
+        //else
+        //{
             fout = jitstdout();
-        }
+        //}
 
         // Iterate noway assert map, create sorted table by occurrence, dump it.
         unsigned             count = NowayAssertMap->GetCount();
@@ -1453,11 +1453,11 @@ void DisplayNowayAssertMap()
                     nacp[i].fl.m_condStr);
         }
 
-        if (fout != jitstdout())
-        {
-            fclose(fout);
-            fout = nullptr;
-        }
+        //if (fout != jitstdout())
+        //{
+        //    fclose(fout);
+        //    fout = nullptr;
+        //}
     }
 }
 
@@ -1563,15 +1563,15 @@ void Compiler::compShutdown()
 #endif
 
 #ifdef FEATURE_JIT_METHOD_PERF
-    if (compJitTimeLogFilename != nullptr)
-    {
-        FILE* jitTimeLogFile = fopen_utf8(compJitTimeLogFilename, "a");
-        if (jitTimeLogFile != nullptr)
-        {
-            CompTimeSummaryInfo::s_compTimeSummary.Print(jitTimeLogFile);
-            fclose(jitTimeLogFile);
-        }
-    }
+    //if (compJitTimeLogFilename != nullptr)
+    //{
+    //    FILE* jitTimeLogFile = fopen_utf8(compJitTimeLogFilename, "a");
+    //    if (jitTimeLogFile != nullptr)
+    //    {
+    //        CompTimeSummaryInfo::s_compTimeSummary.Print(jitTimeLogFile);
+    //        fclose(jitTimeLogFile);
+    //    }
+    //}
 
     JitTimer::Shutdown();
 #endif // FEATURE_JIT_METHOD_PERF
@@ -2981,17 +2981,17 @@ void Compiler::compInitOptions(JitFlags* jitFlags)
 
     memset(compActiveStressModes, 0, sizeof(compActiveStressModes));
 
-    // Read function list, if not already read, and there exists such a list.
-    if (!s_pJitFunctionFileInitialized)
-    {
-        const char* functionFileName = JitConfig.JitFunctionFile();
-        if (functionFileName != nullptr)
-        {
-            s_pJitMethodSet =
-                new (HostAllocator::getHostAllocator()) MethodSet(functionFileName, HostAllocator::getHostAllocator());
-        }
-        s_pJitFunctionFileInitialized = true;
-    }
+    //// Read function list, if not already read, and there exists such a list.
+    //if (!s_pJitFunctionFileInitialized)
+    //{
+    //    const char* functionFileName = JitConfig.JitFunctionFile();
+    //    if (functionFileName != nullptr)
+    //    {
+    //        s_pJitMethodSet =
+    //            new (HostAllocator::getHostAllocator()) MethodSet(functionFileName, HostAllocator::getHostAllocator());
+    //    }
+    //    s_pJitFunctionFileInitialized = true;
+    //}
 #else  // DEBUG
     if (JitConfig.JitDisasm().contains(info.compMethodHnd, info.compClassHnd, &info.compMethodInfo->args))
     {
@@ -5181,12 +5181,12 @@ void Compiler::compCompile(void** methodCodePtr, uint32_t* methodCodeSize, JitFl
     // Generate code
     codeGen->genGenerateCode(methodCodePtr, methodCodeSize);
 
-#if TRACK_LSRA_STATS
-    if (JitConfig.DisplayLsraStats() == 2)
-    {
-        m_pLinearScan->dumpLsraStatsCsv(jitstdout());
-    }
-#endif // TRACK_LSRA_STATS
+//#if TRACK_LSRA_STATS
+//    if (JitConfig.DisplayLsraStats() == 2)
+//    {
+//        m_pLinearScan->dumpLsraStatsCsv(jitstdout());
+//    }
+//#endif // TRACK_LSRA_STATS
 
     // We're done -- set the active phase to the last phase
     // (which isn't really a phase)
@@ -5246,19 +5246,6 @@ void Compiler::compCompile(void** methodCodePtr, uint32_t* methodCodeSize, JitFl
 
     compFunctionTraceEnd(*methodCodePtr, *methodCodeSize, false);
     JITDUMP("Method code size: %d\n", (unsigned)(*methodCodeSize));
-
-#if FUNC_INFO_LOGGING
-    if (compJitFuncInfoFile != nullptr)
-    {
-        assert(!compIsForInlining());
-#ifdef DEBUG // We only have access to info.compFullName in DEBUG builds.
-        fprintf(compJitFuncInfoFile, "%s\n", info.compFullName);
-#elif FEATURE_SIMD
-        fprintf(compJitFuncInfoFile, " %s\n", eeGetMethodFullName(info.compMethodHnd));
-#endif
-        fflush(compJitFuncInfoFile);
-    }
-#endif // FUNC_INFO_LOGGING
 }
 
 #if FEATURE_LOOP_ALIGN
@@ -5953,27 +5940,6 @@ int Compiler::compCompile(CORINFO_MODULE_HANDLE classPtr,
     Compiler* me  = this;
     forceFrameJIT = (void*)&me; // let us see the this pointer in fastchecked build
 #endif
-
-#if FUNC_INFO_LOGGING
-    const char* tmpJitFuncInfoFilename = JitConfig.JitFuncInfoFile();
-
-    if (tmpJitFuncInfoFilename != nullptr)
-    {
-        const char* oldFuncInfoFileName =
-            InterlockedCompareExchangeT(&compJitFuncInfoFilename, tmpJitFuncInfoFilename, NULL);
-        if (oldFuncInfoFileName == nullptr)
-        {
-            assert(compJitFuncInfoFile == nullptr);
-            compJitFuncInfoFile = fopen_utf8(compJitFuncInfoFilename, "a");
-            if (compJitFuncInfoFile == nullptr)
-            {
-#if defined(DEBUG) && !defined(HOST_UNIX) // no 'perror' in the PAL
-                perror("Failed to open JitFuncInfoLogFile");
-#endif // defined(DEBUG) && !defined(HOST_UNIX)
-            }
-        }
-    }
-#endif // FUNC_INFO_LOGGING
 
     // if (s_compMethodsCount==0) setvbuf(jitstdout(), NULL, _IONBF, 0);
 
@@ -9163,14 +9129,6 @@ void Compiler::RecordStateAtEndOfCompilation()
 
 #endif // defined(DEBUG)
 }
-
-#if FUNC_INFO_LOGGING
-// static
-const char* Compiler::compJitFuncInfoFilename = nullptr;
-
-// static
-FILE* Compiler::compJitFuncInfoFile = nullptr;
-#endif // FUNC_INFO_LOGGING
 
 #ifdef DEBUG
 

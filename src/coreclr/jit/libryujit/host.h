@@ -1,6 +1,7 @@
 #pragma once
 
 #include <limits>
+#include "./stdstreams.h"
 
 /// These functions must be implemented by the consumers of the static library.
 
@@ -48,6 +49,13 @@ extern "C" void* ryujit_host_get_tls();
 // Invoked when an unrecovable internal error occurs. The `msg` parameter
 // describes the cause of the error.
 extern "C" void ryujit_host_panic(const char* msg);
+
+// Gets a handle to the standard output stream of the JIT.
+extern "C" FILE* ryujit_host_get_stdout();
+
+// Writes the given null-terminated buffer of bytes to a stream. The `stream`
+// parameter is always obtained via other `ryujit_host_` functions.
+extern "C" void ryujit_host_write(FILE* stream, const char* buffer);
 
 // Represents an allocator, where all allocation requests are passed through
 // `ryujit_host_alloc` and `ryujit_host_free`.

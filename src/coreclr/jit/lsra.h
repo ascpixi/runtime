@@ -1576,7 +1576,7 @@ private:
     LsraStat firstRegSelStat = STAT_FREE;
 
 public:
-    virtual void       dumpLsraStatsCsv(FILE* file);
+    //virtual void       dumpLsraStatsCsv(FILE* file);
     virtual void       dumpLsraStatsSummary(FILE* file);
     static const char* getStatName(unsigned stat);
 

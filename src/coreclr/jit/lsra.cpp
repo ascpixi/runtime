@@ -10100,55 +10100,55 @@ void LinearScan::dumpLsraStats(FILE* file)
     printf("\n");
 }
 
-// -----------------------------------------------------------
-// dumpLsraStatsCsvFormat - dumps Lsra stats to given file in csv format.
+//// -----------------------------------------------------------
+//// dumpLsraStatsCsvFormat - dumps Lsra stats to given file in csv format.
+////
+//// Arguments:
+////    file    -  file to which stats are to be written.
+////
+//void LinearScan::dumpLsraStatsCsv(FILE* file)
+//{
+//    unsigned sumStats[LsraStat::COUNT] = {0};
 //
-// Arguments:
-//    file    -  file to which stats are to be written.
+//    // Write the header if the file is empty
+//    if (ftell(file) == 0)
+//    {
+//        // header
+//        fprintf(file, "\"Method Name\"");
+//        for (int statIndex = 0; statIndex < LsraStat::COUNT; statIndex++)
+//        {
+//            fprintf(file, ",\"%s\"", LinearScan::getStatName(statIndex));
+//        }
+//        fprintf(file, ",\"PerfScore\"\n");
+//    }
 //
-void LinearScan::dumpLsraStatsCsv(FILE* file)
-{
-    unsigned sumStats[LsraStat::COUNT] = {0};
-
-    // Write the header if the file is empty
-    if (ftell(file) == 0)
-    {
-        // header
-        fprintf(file, "\"Method Name\"");
-        for (int statIndex = 0; statIndex < LsraStat::COUNT; statIndex++)
-        {
-            fprintf(file, ",\"%s\"", LinearScan::getStatName(statIndex));
-        }
-        fprintf(file, ",\"PerfScore\"\n");
-    }
-
-    // bbNum == 0
-    for (int statIndex = 0; statIndex < LsraStat::COUNT; statIndex++)
-    {
-        sumStats[statIndex] += blockInfo[0].stats[statIndex];
-    }
-
-    // blocks
-    for (BasicBlock* const block : compiler->Blocks())
-    {
-        if (block->bbNum > bbNumMaxBeforeResolution)
-        {
-            continue;
-        }
-
-        for (int statIndex = 0; statIndex < LsraStat::COUNT; statIndex++)
-        {
-            sumStats[statIndex] += blockInfo[block->bbNum].stats[statIndex];
-        }
-    }
-
-    fprintf(file, "\"%s\"", compiler->info.compFullName);
-    for (int statIndex = 0; statIndex < LsraStat::COUNT; statIndex++)
-    {
-        fprintf(file, ",%u", sumStats[statIndex]);
-    }
-    fprintf(file, ",%.2f\n", compiler->Metrics.PerfScore);
-}
+//    // bbNum == 0
+//    for (int statIndex = 0; statIndex < LsraStat::COUNT; statIndex++)
+//    {
+//        sumStats[statIndex] += blockInfo[0].stats[statIndex];
+//    }
+//
+//    // blocks
+//    for (BasicBlock* const block : compiler->Blocks())
+//    {
+//        if (block->bbNum > bbNumMaxBeforeResolution)
+//        {
+//            continue;
+//        }
+//
+//        for (int statIndex = 0; statIndex < LsraStat::COUNT; statIndex++)
+//        {
+//            sumStats[statIndex] += blockInfo[block->bbNum].stats[statIndex];
+//        }
+//    }
+//
+//    fprintf(file, "\"%s\"", compiler->info.compFullName);
+//    for (int statIndex = 0; statIndex < LsraStat::COUNT; statIndex++)
+//    {
+//        fprintf(file, ",%u", sumStats[statIndex]);
+//    }
+//    fprintf(file, ",%.2f\n", compiler->Metrics.PerfScore);
+//}
 
 // -----------------------------------------------------------
 // dumpLsraStatsSummary - dumps Lsra stats summary to given file

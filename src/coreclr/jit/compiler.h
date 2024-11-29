@@ -1509,7 +1509,7 @@ public:
     virtual void        recordVarLocationsAtStartOfBB(BasicBlock* bb) = 0;
     virtual bool        willEnregisterLocalVars() const               = 0;
 #if TRACK_LSRA_STATS
-    virtual void dumpLsraStatsCsv(FILE* file)     = 0;
+    //virtual void dumpLsraStatsCsv(FILE* file)     = 0;
     virtual void dumpLsraStatsSummary(FILE* file) = 0;
 #endif // TRACK_LSRA_STATS
 };
@@ -6285,18 +6285,18 @@ public:
 
     unsigned fgGetCodeEstimate(BasicBlock* block);
 
-#if DUMP_FLOWGRAPHS
-    enum class PhasePosition
-    {
-        PrePhase,
-        PostPhase
-    };
-    const char* fgProcessEscapes(const char* nameIn, escapeMapping_t* map);
-    static void fgDumpTree(FILE* fgxFile, GenTree* const tree);
-    FILE* fgOpenFlowGraphFile(bool* wbDontClose, Phases phase, PhasePosition pos, const char* type);
-    bool fgDumpFlowGraph(Phases phase, PhasePosition pos);
-    void fgDumpFlowGraphLoops(FILE* file);
-#endif // DUMP_FLOWGRAPHS
+//#if DUMP_FLOWGRAPHS
+//    enum class PhasePosition
+//    {
+//        PrePhase,
+//        PostPhase
+//    };
+//    const char* fgProcessEscapes(const char* nameIn, escapeMapping_t* map);
+//    static void fgDumpTree(FILE* fgxFile, GenTree* const tree);
+//    FILE* fgOpenFlowGraphFile(bool* wbDontClose, Phases phase, PhasePosition pos, const char* type);
+//    //bool fgDumpFlowGraph(Phases phase, PhasePosition pos);
+//    void fgDumpFlowGraphLoops(FILE* file);
+//#endif // DUMP_FLOWGRAPHS
 
 #ifdef DEBUG
 
@@ -10424,7 +10424,7 @@ public:
     static AssemblyNamesList2* s_pJitDisasmIncludeAssembliesList;
 
     static bool       s_pJitFunctionFileInitialized;
-    static MethodSet* s_pJitMethodSet;
+    //static MethodSet* s_pJitMethodSet;
 
 // silence warning of cast to greater size. It is easier to silence than construct code the compiler is happy with, and
 // it is safe in this case
@@ -11416,11 +11416,6 @@ private:
     void RecordStateAtEndOfCompilation();
 
 public:
-#if FUNC_INFO_LOGGING
-    static const char* compJitFuncInfoFilename; // If a log file for per-function information is required, this is the
-                                                // filename to write it to.
-    static FILE* compJitFuncInfoFile;           // And this is the actual FILE* to write to.
-#endif                                          // FUNC_INFO_LOGGING
 
 #if MEASURE_NOWAY
     void RecordNowayAssert(const char* filename, unsigned line, const char* condStr);

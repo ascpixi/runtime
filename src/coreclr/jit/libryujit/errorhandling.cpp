@@ -3,7 +3,6 @@
 
 #include "./errorhandling.h"
 #include "./tls.h"
-#include <iostream>
 
 void try_finally(std::function<void()> block, std::function<void()> finally_handler)
 {

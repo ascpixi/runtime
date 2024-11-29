@@ -16,6 +16,9 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 #endif
 #include "compiler.h"
 
+#include "libryujit/stdstreams.h"
+#include "libryujit/host.h"
+
 #if MEASURE_FATAL
 unsigned fatal_badCode;
 unsigned fatal_noWay;
@@ -141,12 +144,6 @@ void notYetImplemented(const char* msg, const char* filename, unsigned line)
             printf("\n\n%s - NYI (%s:%d - %s)\n", pCompiler->info.compFullName, filename, line, msg);
         }
     }
-    if (Compiler::compJitFuncInfoFile != nullptr)
-    {
-        fprintf(Compiler::compJitFuncInfoFile, "%s - NYI (%s:%d - %s)\n",
-                (env == nullptr) ? "UNKNOWN" : env->compiler->info.compFullName, filename, line, msg);
-        fflush(Compiler::compJitFuncInfoFile);
-    }
 #else  // !DEBUG
     if (Compiler::compJitFuncInfoFile != nullptr)
     {
@@ -249,14 +246,6 @@ extern "C" void __cdecl assertAbort(const char* why, const char* file, unsigned 
     }
     printf(""); // null string means flush
 
-#if FUNC_INFO_LOGGING
-    if (Compiler::compJitFuncInfoFile != nullptr)
-    {
-        fprintf(Compiler::compJitFuncInfoFile, "%s - Assertion failed (%s:%d - %s) during %s\n",
-                (env == nullptr) ? "UNKNOWN" : env->compiler->info.compFullName, file, line, why, phaseName);
-    }
-#endif // FUNC_INFO_LOGGING
-
     if (env->compHnd->doAssert(file, line, msg))
     {
         DebugBreak();
@@ -292,7 +281,6 @@ int vflogf(FILE* file, const char* fmt, va_list args)
     // 0-length string means flush
     if (fmt[0] == '\0')
     {
-        fflush(file);
         return 0;
     }
 
@@ -305,8 +293,7 @@ int vflogf(FILE* file, const char* fmt, va_list args)
     //    OutputDebugStringA(buffer);
     //}
 
-    // We use fputs here so that this executes as fast a possible
-    fputs(&buffer[0], file);
+    ryujit_host_write(file, &buffer[0]);
     return written;
 }
 

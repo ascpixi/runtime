@@ -3,6 +3,8 @@
 
 /*****************************************************************************/
 
+#include "libryujit/stdstreams.h"
+
 int jitprintf(const char* fmt, ...);
 
 #ifdef DEBUG

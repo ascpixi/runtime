@@ -1488,21 +1488,21 @@ void DisAssembler::disAsmCode(BYTE*  hotCodePtr,
     disDiffable = true;
 #endif // !DEBUG
 
-#ifdef DEBUG
-    const char* fileName = JitConfig.JitLateDisasmTo();
-    if (fileName != nullptr)
-    {
-        disAsmFile = fopen_utf8(fileName, "a+");
-    }
-#else  // !DEBUG
+//#ifdef DEBUG
+//    const char* fileName = JitConfig.JitLateDisasmTo();
+//    if (fileName != nullptr)
+//    {
+//        disAsmFile = fopen_utf8(fileName, "a+");
+//    }
+//#else  // !DEBUG
     // NOTE: non-DEBUG builds always use jitstdout currently!
     disAsmFile = jitstdout();
-#endif // !DEBUG
+//#endif // !DEBUG
 
-    if (disAsmFile == nullptr)
-    {
-        disAsmFile = jitstdout();
-    }
+    //if (disAsmFile == nullptr)
+    //{
+    //    disAsmFile = jitstdout();
+    //}
 
     // As this writes to a common file, this is not reentrant.
 
@@ -1538,14 +1538,14 @@ void DisAssembler::disAsmCode(BYTE*  hotCodePtr,
 
     fprintf(disAsmFile, "\n");
 
-    if (disAsmFile != jitstdout())
-    {
-        fclose(disAsmFile);
-    }
-    else
-    {
-        fflush(disAsmFile);
-    }
+    //if (disAsmFile != jitstdout())
+    //{
+    //    fclose(disAsmFile);
+    //}
+    //else
+    //{
+    //    fflush(disAsmFile);
+    //}
 }
 
 /*****************************************************************************/

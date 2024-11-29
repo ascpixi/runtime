@@ -132,52 +132,52 @@ const char* BitSetSupport::OpNames[BitSetSupport::BSOP_NUMOPS] = {
 
 void BitSetSupport::BitSetOpCounter::RecordOp(BitSetSupport::Operation op)
 {
-    OpCounts[op]++;
-    TotalOps++;
+    //OpCounts[op]++;
+    //TotalOps++;
 
-    if ((TotalOps % 1000000) == 0)
-    {
-        if (OpOutputFile == nullptr)
-        {
-            OpOutputFile = fopen_utf8(m_fileName, "a");
-        }
-        fprintf(OpOutputFile, "@ %d total ops.\n", TotalOps);
+    //if ((TotalOps % 1000000) == 0)
+    //{
+    //    //if (OpOutputFile == nullptr)
+    //    //{
+    //    //    OpOutputFile = fopen_utf8(m_fileName, "a");
+    //    //}
+    //    //fprintf(OpOutputFile, "@ %d total ops.\n", TotalOps);
 
-        unsigned OpOrder[BSOP_NUMOPS];
-        bool     OpOrdered[BSOP_NUMOPS];
+    //    unsigned OpOrder[BSOP_NUMOPS];
+    //    bool     OpOrdered[BSOP_NUMOPS];
 
-        // First sort by total operations (into an index permutation array, using a simple n^2 sort).
-        for (unsigned k = 0; k < BitSetSupport::BSOP_NUMOPS; k++)
-        {
-            OpOrdered[k] = false;
-        }
-        for (unsigned k = 0; k < BitSetSupport::BSOP_NUMOPS; k++)
-        {
-            bool     candSet = false;
-            unsigned cand    = 0;
-            unsigned candInd = 0;
-            for (unsigned j = 0; j < BitSetSupport::BSOP_NUMOPS; j++)
-            {
-                if (OpOrdered[j])
-                {
-                    continue;
-                }
-                if (!candSet || OpCounts[j] > cand)
-                {
-                    candInd = j;
-                    cand    = OpCounts[j];
-                    candSet = true;
-                }
-            }
-            assert(candSet);
-            OpOrder[k]         = candInd;
-            OpOrdered[candInd] = true;
-        }
+    //    // First sort by total operations (into an index permutation array, using a simple n^2 sort).
+    //    for (unsigned k = 0; k < BitSetSupport::BSOP_NUMOPS; k++)
+    //    {
+    //        OpOrdered[k] = false;
+    //    }
+    //    for (unsigned k = 0; k < BitSetSupport::BSOP_NUMOPS; k++)
+    //    {
+    //        bool     candSet = false;
+    //        unsigned cand    = 0;
+    //        unsigned candInd = 0;
+    //        for (unsigned j = 0; j < BitSetSupport::BSOP_NUMOPS; j++)
+    //        {
+    //            if (OpOrdered[j])
+    //            {
+    //                continue;
+    //            }
+    //            if (!candSet || OpCounts[j] > cand)
+    //            {
+    //                candInd = j;
+    //                cand    = OpCounts[j];
+    //                candSet = true;
+    //            }
+    //        }
+    //        assert(candSet);
+    //        OpOrder[k]         = candInd;
+    //        OpOrdered[candInd] = true;
+    //    }
 
-        for (unsigned ii = 0; ii < BitSetSupport::BSOP_NUMOPS; ii++)
-        {
-            unsigned i = OpOrder[ii];
-            fprintf(OpOutputFile, "   Op %40s: %8d\n", OpNames[i], OpCounts[i]);
-        }
-    }
+    //    for (unsigned ii = 0; ii < BitSetSupport::BSOP_NUMOPS; ii++)
+    //    {
+    //        unsigned i = OpOrder[ii];
+    //        fprintf(OpOutputFile, "   Op %40s: %8d\n", OpNames[i], OpCounts[i]);
+    //    }
+    //}
 }

@@ -694,11 +694,6 @@ protected:
 
     void genRecordRichDebugInfoInlineTree(InlineContext* context, ICorDebugInfo::InlineTreeNode* tree);
 
-#ifdef DEBUG
-    void genReportRichDebugInfoToFile();
-    void genReportRichDebugInfoInlineTreeToFile(FILE* file, InlineContext* context, bool* first);
-#endif
-
     void genEnsureCodeEmitted(const DebugInfo& di);
 
     //-------------------------------------------------------------------------

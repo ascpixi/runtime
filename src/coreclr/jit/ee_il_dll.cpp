@@ -74,74 +74,9 @@ extern "C" DLLEXPORT void jitStartup(ICorJitHost* jitHost)
 
     g_jitInitialized = true;
 }
-
-static FILE* volatile s_jitstdout;
-
-static FILE* jitstdoutInit()
-{
-    const char* jitStdOutFile = JitConfig.JitStdOutFile();
-    FILE*       file          = nullptr;
-    if (jitStdOutFile != nullptr)
-    {
-        file = fopen_utf8(jitStdOutFile, "a");
-        assert(file != nullptr);
-    }
-
-#if !defined(HOST_UNIX)
-    if (file == nullptr)
-    {
-        int stdoutFd = _fileno(procstdout());
-        // Check fileno error output(s) -1 may overlap with errno result
-        // but is included for completeness.
-        // We want to detect the case where the initial handle is null
-        // or bogus and avoid making further calls.
-        if ((stdoutFd != -1) && (stdoutFd != -2) && (errno != EINVAL))
-        {
-            int jitstdoutFd = _dup(stdoutFd);
-            // Check the error status returned by dup.
-            if (jitstdoutFd != -1)
-            {
-                _setmode(jitstdoutFd, _O_TEXT);
-                file = _fdopen(jitstdoutFd, "w");
-                assert(file != nullptr);
-
-                // Prevent the FILE* from buffering its output in order to avoid calls to
-                // `fflush()` throughout the code.
-                setvbuf(file, nullptr, _IONBF, 0);
-            }
-        }
-    }
-#endif // !HOST_UNIX
-
-    if (file == nullptr)
-    {
-        file = procstdout();
-    }
-
-    FILE* observed = InterlockedCompareExchangeT(&s_jitstdout, file, nullptr);
-
-    if (observed != nullptr)
-    {
-        if (file != procstdout())
-        {
-            fclose(file);
-        }
-
-        return observed;
-    }
-
-    return file;
-}
-
 FILE* jitstdout()
 {
-    FILE* file = s_jitstdout;
-    if (file != nullptr)
-    {
-        return file;
-    }
-
-    return jitstdoutInit();
+    return ryujit_host_get_stdout();
 }
 
 // Like printf/logf, but only outputs to jitstdout -- skips call back into EE.
@@ -149,7 +84,11 @@ int jitprintf(const char* fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
-    int status = vfprintf(jitstdout(), fmt, vl);
+
+    char buffer[8192];
+    int status = npf_vsnprintf(buffer, 8192, fmt, vl);
+    ryujit_host_write(jitstdout(), buffer);
+
     va_end(vl);
     return status;
 }
@@ -162,18 +101,6 @@ void jitShutdown(bool processIsTerminating)
     }
 
     Compiler::compShutdown();
-
-    FILE* file = s_jitstdout;
-    if ((file != nullptr) && (file != procstdout()))
-    {
-        // When the process is terminating, the fclose call is unnecessary and is also prone to
-        // crashing since the UCRT itself often frees the backing memory earlier on in the
-        // termination sequence.
-        if (!processIsTerminating)
-        {
-            fclose(file);
-        }
-    }
 
     g_jitInitialized = false;
 }

@@ -2174,7 +2174,7 @@ void CodeGen::genEmitMachineCode()
             printf("; ============================================================\n\n");
         }
 
-        fflush(jitstdout());
+        //fflush(jitstdout());
     }
 
     if (verbose)
@@ -2259,24 +2259,11 @@ void CodeGen::genEmitUnwindDebugGCandEH()
         BYTE*  dumpAddr = (BYTE*)codePtrRW;
         size_t dumpSize = finalHotCodeSize;
 
-        const char* rawHexCodeFilePath = JitConfig.JitRawHexCodeFile();
-        if (rawHexCodeFilePath)
-        {
-            FILE* hexDmpf = fopen_utf8(rawHexCodeFilePath, "at"); // NOTE: file append mode
-            if (hexDmpf != nullptr)
-            {
-                hexDump(hexDmpf, dumpAddr, dumpSize);
-                fclose(hexDmpf);
-            }
-        }
-        else
-        {
-            FILE* dmpf = jitstdout();
+        FILE* dmpf = jitstdout();
 
-            fprintf(dmpf, "Generated native code for %s:\n", compiler->info.compFullName);
-            hexDump(dmpf, dumpAddr, dumpSize);
-            fprintf(dmpf, "\n\n");
-        }
+        fprintf(dmpf, "Generated native code for %s:\n", compiler->info.compFullName);
+        hexDump(dmpf, dumpAddr, dumpSize);
+        fprintf(dmpf, "\n\n");
     }
 #endif // DEBUG
 
@@ -6760,103 +6747,6 @@ void CodeGen::genIPmappingGen()
     compiler->eeSetLIdone();
 }
 
-#ifdef DEBUG
-//------------------------------------------------------------------------
-// genReportRichDebugInfoInlineTreeToFile:
-//   Recursively process a context in the inline tree and write information about it to a file.
-//
-// Parameters:
-//   file - the file
-//   context - the context
-//   first - whether this is the first of the siblings being written out
-//
-void CodeGen::genReportRichDebugInfoInlineTreeToFile(FILE* file, InlineContext* context, bool* first)
-{
-    if (context->GetSibling() != nullptr)
-    {
-        genReportRichDebugInfoInlineTreeToFile(file, context->GetSibling(), first);
-    }
-
-    if (context->IsSuccess())
-    {
-        if (!*first)
-        {
-            fprintf(file, ",");
-        }
-
-        *first = false;
-
-        fprintf(file, "{\"Ordinal\":%u,", context->GetOrdinal());
-        fprintf(file, "\"MethodID\":%lld,", (int64_t)context->GetCallee());
-        fprintf(file, "\"ILOffset\":%u,", context->GetLocation().GetOffset());
-        fprintf(file, "\"LocationFlags\":%u,", (uint32_t)context->GetLocation().EncodeSourceTypes());
-        fprintf(file, "\"ExactILOffset\":%u,", context->GetActualCallOffset());
-        auto append = [&]() {
-            char        buffer[256];
-            const char* methodName = compiler->eeGetMethodName(context->GetCallee(), buffer, sizeof(buffer));
-            fprintf(file, "\"MethodName\":\"%s\",", methodName);
-        };
-        append();
-        fprintf(file, "\"Inlinees\":[");
-        if (context->GetChild() != nullptr)
-        {
-            bool childFirst = true;
-            genReportRichDebugInfoInlineTreeToFile(file, context->GetChild(), &childFirst);
-        }
-        fprintf(file, "]}");
-    }
-}
-
-//------------------------------------------------------------------------
-// genReportRichDebugInfoToFile:
-//   Write rich debug info in JSON format to file specified by environment variable.
-//
-void CodeGen::genReportRichDebugInfoToFile()
-{
-    if (JitConfig.WriteRichDebugInfoFile() == nullptr)
-    {
-        return;
-    }
-
-    static CritSecObject s_critSect;
-    CritSecHolder        holder(s_critSect);
-
-    FILE* file = fopen(JitConfig.WriteRichDebugInfoFile(), "a");
-    if (file == nullptr)
-    {
-        return;
-    }
-
-    // MethodID in ETW events are the method handles.
-    fprintf(file, "{\"MethodID\":%lld,", (INT64)compiler->info.compMethodHnd);
-    // Print inline tree.
-    fprintf(file, "\"InlineTree\":");
-
-    bool first = true;
-    genReportRichDebugInfoInlineTreeToFile(file, compiler->compInlineContext, &first);
-    fprintf(file, ",\"Mappings\":[");
-    first = true;
-    for (RichIPMapping& mapping : compiler->genRichIPmappings)
-    {
-        if (!first)
-        {
-            fprintf(file, ",");
-        }
-
-        first = false;
-
-        fprintf(file, "{\"NativeOffset\":%u,\"InlineContext\":%u,\"ILOffset\":%u}",
-                mapping.nativeLoc.CodeOffset(GetEmitter()), mapping.debugInfo.GetInlineContext()->GetOrdinal(),
-                mapping.debugInfo.GetLocation().GetOffset());
-    }
-
-    fprintf(file, "]}\n");
-
-    fclose(file);
-}
-
-#endif
-
 //------------------------------------------------------------------------
 // SuccessfulSibling:
 //   Find the next sibling inline context that was successfully inlined.
@@ -6919,8 +6809,6 @@ void CodeGen::genRecordRichDebugInfoInlineTree(InlineContext* context, ICorDebug
 //
 void CodeGen::genReportRichDebugInfo()
 {
-    INDEBUG(genReportRichDebugInfoToFile());
-
     if (JitConfig.RichDebugInfo() == 0)
     {
         return;

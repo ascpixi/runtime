@@ -388,7 +388,7 @@ static void regenLog(unsigned codeDelta,
                      BYTE*    base,
                      unsigned enSize)
 {
-    CallPattern pat;
+    /*CallPattern pat;
 
     pat.fld.argCnt    = (argCnt < 0xff) ? argCnt : 0xff;
     pat.fld.regMask   = (regMask < 0xff) ? regMask : 0xff;
@@ -415,43 +415,43 @@ static void regenLog(unsigned codeDelta,
     fprintf(logFile, "),\n");
     fflush(logFile);
 
-    LeaveCriticalSection(&logFileLock);
+    LeaveCriticalSection(&logFileLock);*/
 }
 #endif
 
 #if REGEN_SHORTCUTS
 static void regenLog(unsigned encoding, InfoHdr* header, InfoHdr* state)
 {
-    if (logFile == NULL)
-    {
-        logFile = fopen_utf8("regen.txt", "a");
-        InitializeCriticalSection(&logFileLock);
-    }
+    //if (logFile == NULL)
+    //{
+    //    logFile = fopen_utf8("regen.txt", "a");
+    //    InitializeCriticalSection(&logFileLock);
+    //}
 
-    EnterCriticalSection(&logFileLock);
+    //EnterCriticalSection(&logFileLock);
 
-    fprintf(logFile,
-            "InfoHdr( %2d, %2d, %1d, %1d, %1d,"
-            " %1d, %1d, %1d, %1d, %1d,"
-            " %1d, %1d, %1d, %1d, %1d, %1d,"
-            " %1d, %1d, %1d,"
-            " %1d, %2d, %2d,"
-            " %2d, %2d, %2d, %2d, %2d, %2d), \n",
-            state->prologSize, state->epilogSize, state->epilogCount, state->epilogAtEnd, state->ediSaved,
-            state->esiSaved, state->ebxSaved, state->ebpSaved, state->ebpFrame, state->interruptible,
-            state->doubleAlign, state->security, state->handlers, state->localloc, state->editNcontinue, state->varargs,
-            state->profCallbacks, state->genericsContext, state->genericsContextIsMethodDesc, state->returnKind,
-            state->argCount, state->frameSize,
-            (state->untrackedCnt <= SET_UNTRACKED_MAX) ? state->untrackedCnt : HAS_UNTRACKED,
-            (state->varPtrTableSize == 0) ? 0 : HAS_VARPTR,
-            (state->gsCookieOffset == INVALID_GS_COOKIE_OFFSET) ? 0 : HAS_GS_COOKIE_OFFSET,
-            (state->syncStartOffset == INVALID_SYNC_OFFSET) ? 0 : HAS_SYNC_OFFSET,
-            (state->syncStartOffset == INVALID_SYNC_OFFSET) ? 0 : HAS_SYNC_OFFSET,
-            (state->revPInvokeOffset == INVALID_REV_PINVOKE_OFFSET) ? 0 : HAS_REV_PINVOKE_FRAME_OFFSET);
+    //fprintf(logFile,
+    //        "InfoHdr( %2d, %2d, %1d, %1d, %1d,"
+    //        " %1d, %1d, %1d, %1d, %1d,"
+    //        " %1d, %1d, %1d, %1d, %1d, %1d,"
+    //        " %1d, %1d, %1d,"
+    //        " %1d, %2d, %2d,"
+    //        " %2d, %2d, %2d, %2d, %2d, %2d), \n",
+    //        state->prologSize, state->epilogSize, state->epilogCount, state->epilogAtEnd, state->ediSaved,
+    //        state->esiSaved, state->ebxSaved, state->ebpSaved, state->ebpFrame, state->interruptible,
+    //        state->doubleAlign, state->security, state->handlers, state->localloc, state->editNcontinue, state->varargs,
+    //        state->profCallbacks, state->genericsContext, state->genericsContextIsMethodDesc, state->returnKind,
+    //        state->argCount, state->frameSize,
+    //        (state->untrackedCnt <= SET_UNTRACKED_MAX) ? state->untrackedCnt : HAS_UNTRACKED,
+    //        (state->varPtrTableSize == 0) ? 0 : HAS_VARPTR,
+    //        (state->gsCookieOffset == INVALID_GS_COOKIE_OFFSET) ? 0 : HAS_GS_COOKIE_OFFSET,
+    //        (state->syncStartOffset == INVALID_SYNC_OFFSET) ? 0 : HAS_SYNC_OFFSET,
+    //        (state->syncStartOffset == INVALID_SYNC_OFFSET) ? 0 : HAS_SYNC_OFFSET,
+    //        (state->revPInvokeOffset == INVALID_REV_PINVOKE_OFFSET) ? 0 : HAS_REV_PINVOKE_FRAME_OFFSET);
 
-    fflush(logFile);
+    //fflush(logFile);
 
-    LeaveCriticalSection(&logFileLock);
+    //LeaveCriticalSection(&logFileLock);
 }
 #endif
 

@@ -241,7 +241,7 @@ CONFIG_METHODSET(JitDebugDump, "JitDebugDump")
 CONFIG_METHODSET(JitHalt, "JitHalt") // Emits break instruction into jitted code
 CONFIG_METHODSET(JitInclude, "JitInclude")
 CONFIG_METHODSET(JitLateDisasm, "JitLateDisasm")  // Generate late disassembly for the specified methods.
-CONFIG_STRING(JitLateDisasmTo, "JitLateDisasmTo") // If set, sends late disassembly output to this file instead of
+//CONFIG_STRING(JitLateDisasmTo, "JitLateDisasmTo") // If set, sends late disassembly output to this file instead of
                                                   // stdout/JitStdOutFile.
 CONFIG_METHODSET(JitNoProcedureSplitting, "JitNoProcedureSplitting")     // Disallow procedure splitting for specified
                                                                          // methods
@@ -614,7 +614,7 @@ RELEASE_CONFIG_INTEGER(FastTailCalls, "FastTailCalls", 1)
 RELEASE_CONFIG_INTEGER(JitMeasureNowayAssert, "JitMeasureNowayAssert", 0)
 
 // Set to file to write noway_assert usage to a file (if not set: stdout). Only valid if MEASURE_NOWAY is defined.
-RELEASE_CONFIG_STRING(JitMeasureNowayAssertFile, "JitMeasureNowayAssertFile")
+//RELEASE_CONFIG_STRING(JitMeasureNowayAssertFile, "JitMeasureNowayAssertFile")
 
 CONFIG_INTEGER(EnableExtraSuperPmiQueries, "EnableExtraSuperPmiQueries", 0) // Make extra queries to somewhat
                                                                             // future-proof SuperPmi method contexts.

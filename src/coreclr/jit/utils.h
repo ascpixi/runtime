@@ -719,47 +719,47 @@ public:
 //
 // TODO: Should this be more related to JitConfigValues::MethodSet?
 //
-class MethodSet
-{
-    // TODO: use a hash table? or two: one on hash value, one on function name
-    struct MethodInfo
-    {
-        char*       m_MethodName;
-        int         m_MethodHash;
-        MethodInfo* m_next;
-
-        MethodInfo(char* methodName, int methodHash)
-            : m_MethodName(methodName)
-            , m_MethodHash(methodHash)
-            , m_next(nullptr)
-        {
-        }
-    };
-
-    MethodInfo*   m_pInfos; // List of function info
-    HostAllocator m_alloc;  // HostAllocator to use in this class
-
-public:
-    // Take a Unicode string with the filename containing a list of function names, parse it, and store it.
-    MethodSet(const char* filename, HostAllocator alloc);
-
-    ~MethodSet();
-
-    // Return 'true' if 'functionName' (in UTF-8 format) is in the stored set of assembly names.
-    bool IsInSet(const char* functionName);
-
-    // Return 'true' if 'functionHash' (in UTF-8 format) is in the stored set of assembly names.
-    bool IsInSet(int functionHash);
-
-    // Return 'true' if this method is active. Prefer non-zero methodHash for check over (non-null) methodName.
-    bool IsActiveMethod(const char* methodName, int methodHash);
-
-    // Return 'true' if the assembly name set is empty.
-    bool IsEmpty()
-    {
-        return m_pInfos == nullptr;
-    }
-};
+//class MethodSet
+//{
+//    // TODO: use a hash table? or two: one on hash value, one on function name
+//    struct MethodInfo
+//    {
+//        char*       m_MethodName;
+//        int         m_MethodHash;
+//        MethodInfo* m_next;
+//
+//        MethodInfo(char* methodName, int methodHash)
+//            : m_MethodName(methodName)
+//            , m_MethodHash(methodHash)
+//            , m_next(nullptr)
+//        {
+//        }
+//    };
+//
+//    MethodInfo*   m_pInfos; // List of function info
+//    HostAllocator m_alloc;  // HostAllocator to use in this class
+//
+//public:
+//    // Take a Unicode string with the filename containing a list of function names, parse it, and store it.
+//    MethodSet(const char* filename, HostAllocator alloc);
+//
+//    ~MethodSet();
+//
+//    // Return 'true' if 'functionName' (in UTF-8 format) is in the stored set of assembly names.
+//    bool IsInSet(const char* functionName);
+//
+//    // Return 'true' if 'functionHash' (in UTF-8 format) is in the stored set of assembly names.
+//    bool IsInSet(int functionHash);
+//
+//    // Return 'true' if this method is active. Prefer non-zero methodHash for check over (non-null) methodName.
+//    bool IsActiveMethod(const char* methodName, int methodHash);
+//
+//    // Return 'true' if the assembly name set is empty.
+//    bool IsEmpty()
+//    {
+//        return m_pInfos == nullptr;
+//    }
+//};
 
 #ifdef FEATURE_JIT_METHOD_PERF
 // When Start() is called time is noted and when ElapsedTime
@@ -1193,6 +1193,6 @@ bool CastFromDoubleOverflows(double fromValue, var_types toType);
 #define STRINGIFY_(x) #x
 #define STRINGIFY(x)  STRINGIFY_(x)
 
-FILE* fopen_utf8(const char* path, const char* mode);
+//FILE* fopen_utf8(const char* path, const char* mode);
 
 #endif // _UTILS_H_

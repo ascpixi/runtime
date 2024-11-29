@@ -74,6 +74,8 @@
 #include "jit.h"
 #include "gentree.h"
 
+#include "libryujit/stdstreams.h"
+
 // Implementation limits
 
 const unsigned int MAX_INL_ARGS = 32; // does not include obj pointer
@@ -286,17 +288,17 @@ public:
         fprintf(file, " " #x "=\"True\"");                                                                             \
     }
 
-    // Detailed data value dump as XML
-    void DumpXml(FILE* file, unsigned indent = 0)
-    {
-        fprintf(file, "%*s<%s", indent, "", GetName());
-        OnDumpXml(file);
-        fprintf(file, " />\n");
-    }
+    //// Detailed data value dump as XML
+    //void DumpXml(FILE* file, unsigned indent = 0)
+    //{
+    //    fprintf(file, "%*s<%s", indent, "", GetName());
+    //    OnDumpXml(file);
+    //    fprintf(file, " />\n");
+    //}
 
-    virtual void OnDumpXml(FILE* file, unsigned indent = 0) const
-    {
-    }
+    //virtual void OnDumpXml(FILE* file, unsigned indent = 0) const
+    //{
+    //}
 
     // True if this is the inline targeted by data collection
     bool IsDataCollectionTarget()
