@@ -100,6 +100,7 @@ set( JIT_SOURCES
   libryujit/interop.cpp
   libryujit/errorhandling.cpp
   libryujit/tls.cpp
+  libryujit/polyfill.cpp
   libryujit/lib/nanoprintf.cpp
 
   abi.cpp

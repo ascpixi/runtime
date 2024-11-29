@@ -31,17 +31,18 @@ extern "C" {
 
 #endif // __cplusplus
 
+extern void __ryujit_pal_asserte_fail(const char* format, ...);
+
 #ifndef _ASSERTE
 #if defined(_DEBUG)
 #define _ASSERTE(e) do {                                        \
         if (!(e)) {                                             \
-            fprintf (stderr,                                    \
+            __ryujit_pal_asserte_fail (                         \
                      "ASSERT FAILED\n"                          \
                      "\tExpression: %s\n"                       \
                      "\tLocation:   line %d in %s\n"            \
                      "\tFunction:   %s\n",                      \
                      #e, __LINE__, __FILE__, __FUNCTION__);     \
-            DebugBreak();                                       \
         }                                                       \
     }while (0)
 #else // !DEBUG
