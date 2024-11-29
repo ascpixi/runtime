@@ -15,7 +15,7 @@ if (MSVC)
   add_compile_options($<$<COMPILE_LANGUAGE:C,CXX>:/permissive->)
 endif()
 
-if (!MSVC)
+if (NOT MSVC)
     add_compile_options(-fno-exceptions)
 endif()
 
