@@ -18,6 +18,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 #include "libryujit/stdstreams.h"
 #include "libryujit/host.h"
+#include "libryujit/lib/debug-trap.h"
 
 #if MEASURE_FATAL
 unsigned fatal_badCode;
@@ -39,7 +40,7 @@ void DECLSPEC_NORETURN fatal(int errCode)
     {
         if (JitConfig.DebugBreakOnVerificationFailure())
         {
-            //DebugBreak();
+            psnip_trap();
         }
     }
 #endif // DEBUG
@@ -103,7 +104,7 @@ void DECLSPEC_NORETURN noWayAssertBody()
     // This kind of noway is hit for unreached().
     if (JitConfig.JitEnableNoWayAssert())
     {
-        DebugBreak();
+        psnip_trap();
     }
 #endif // !DEBUG
 
@@ -248,7 +249,7 @@ extern "C" void __cdecl assertAbort(const char* why, const char* file, unsigned 
 
     if (env->compHnd->doAssert(file, line, msg))
     {
-        DebugBreak();
+        psnip_trap();
     }
 
     Compiler* comp = JitTls::GetCompiler();
