@@ -10723,7 +10723,7 @@ void Compiler::impImportBlockCode(BasicBlock* block)
                 /******************************** NYI *******************************/
 
             case 0xCC:
-                OutputDebugStringA("CLR: Invalid x86 breakpoint in IL stream\n");
+                //OutputDebugStringA("CLR: Invalid x86 breakpoint in IL stream\n");
                 FALLTHROUGH;
 
             case CEE_ILLEGAL:
