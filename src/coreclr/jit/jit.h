@@ -306,8 +306,8 @@ typedef ptrdiff_t ssize_t;
 
 #if defined(TARGET_ARM64) || defined(TARGET_ARM) || defined(TARGET_X86) || defined(TARGET_AMD64)
 #ifdef DEBUG
-#define LATE_DISASM 1
-#define USE_COREDISTOOLS
+//#define LATE_DISASM 1
+//#define USE_COREDISTOOLS
 #endif // DEBUG
 #endif // platforms
 
