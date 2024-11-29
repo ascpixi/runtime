@@ -39,10 +39,8 @@ extern "C" {
                      "ASSERT FAILED\n"                          \
                      "\tExpression: %s\n"                       \
                      "\tLocation:   line %d in %s\n"            \
-                     "\tFunction:   %s\n"                       \
-                     "\tProcess:    %d\n",                      \
-                     #e, __LINE__, __FILE__, __FUNCTION__,      \
-                     GetCurrentProcessId());                    \
+                     "\tFunction:   %s\n",                      \
+                     #e, __LINE__, __FILE__, __FUNCTION__);     \
             DebugBreak();                                       \
         }                                                       \
     }while (0)
