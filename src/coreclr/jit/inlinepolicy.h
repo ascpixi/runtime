@@ -139,7 +139,7 @@ public:
     int CodeSizeEstimate() override;
 
 #if defined(DEBUG)
-    void OnDumpXml(FILE* file, unsigned indent = 0) const override;
+    //void OnDumpXml(FILE* file, unsigned indent = 0) const override;
 
     const char* GetName() const override
     {
@@ -242,7 +242,7 @@ public:
     }
 
 #if defined(DEBUG)
-    void OnDumpXml(FILE* file, unsigned indent = 0) const override;
+    //void OnDumpXml(FILE* file, unsigned indent = 0) const override;
 
     const char* GetName() const override
     {
@@ -308,9 +308,9 @@ public:
 
 #if defined(DEBUG)
 
-    // Externalize data
-    void DumpData(FILE* file) const override;
-    void DumpSchema(FILE* file) const override;
+    //// Externalize data
+    //void DumpData(FILE* file) const override;
+    //void DumpSchema(FILE* file) const override;
 
     // Miscellaneous
     const char* GetName() const override

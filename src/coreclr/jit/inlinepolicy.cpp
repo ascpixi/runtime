@@ -1000,42 +1000,42 @@ int DefaultPolicy::CodeSizeEstimate()
     }
 }
 
-#if defined(DEBUG)
-//------------------------------------------------------------------------
-// OnDumpXml: Dump DefaultPolicy data as XML
+//#if defined(DEBUG)
+////------------------------------------------------------------------------
+//// OnDumpXml: Dump DefaultPolicy data as XML
+////
+//// Arguments:
+////    file     - stream to output to
+////    indent   - indent level
 //
-// Arguments:
-//    file     - stream to output to
-//    indent   - indent level
-
-void DefaultPolicy::OnDumpXml(FILE* file, unsigned indent) const
-{
-    XATTR_R8(m_Multiplier)
-    XATTR_I4(m_CodeSize)
-    XATTR_I4(m_CallsiteFrequency)
-    XATTR_I4(m_CallsiteDepth)
-    XATTR_I4(m_InstructionCount)
-    XATTR_I4(m_LoadStoreCount)
-    XATTR_I4(m_ArgFeedsTest)
-    XATTR_I4(m_ArgFeedsConstantTest)
-    XATTR_I4(m_ArgFeedsRangeCheck)
-    XATTR_I4(m_ConstantArgFeedsConstantTest)
-    XATTR_I4(m_CalleeNativeSizeEstimate)
-    XATTR_I4(m_CallsiteNativeSizeEstimate)
-    XATTR_B(m_IsForceInline)
-    XATTR_B(m_IsForceInlineKnown)
-    XATTR_B(m_IsInstanceCtor)
-    XATTR_B(m_IsFromPromotableValueClass)
-    XATTR_B(m_HasSimd)
-    XATTR_B(m_LooksLikeWrapperMethod)
-    XATTR_B(m_MethodIsMostlyLoadStore)
-    XATTR_B(m_CallsiteIsInTryRegion)
-    XATTR_B(m_CallsiteIsInLoop)
-    XATTR_B(m_IsNoReturn)
-    XATTR_B(m_IsNoReturnKnown)
-    XATTR_B(m_InsideThrowBlock)
-}
-#endif
+//void DefaultPolicy::OnDumpXml(FILE* file, unsigned indent) const
+//{
+//    XATTR_R8(m_Multiplier)
+//    XATTR_I4(m_CodeSize)
+//    XATTR_I4(m_CallsiteFrequency)
+//    XATTR_I4(m_CallsiteDepth)
+//    XATTR_I4(m_InstructionCount)
+//    XATTR_I4(m_LoadStoreCount)
+//    XATTR_I4(m_ArgFeedsTest)
+//    XATTR_I4(m_ArgFeedsConstantTest)
+//    XATTR_I4(m_ArgFeedsRangeCheck)
+//    XATTR_I4(m_ConstantArgFeedsConstantTest)
+//    XATTR_I4(m_CalleeNativeSizeEstimate)
+//    XATTR_I4(m_CallsiteNativeSizeEstimate)
+//    XATTR_B(m_IsForceInline)
+//    XATTR_B(m_IsForceInlineKnown)
+//    XATTR_B(m_IsInstanceCtor)
+//    XATTR_B(m_IsFromPromotableValueClass)
+//    XATTR_B(m_HasSimd)
+//    XATTR_B(m_LooksLikeWrapperMethod)
+//    XATTR_B(m_MethodIsMostlyLoadStore)
+//    XATTR_B(m_CallsiteIsInTryRegion)
+//    XATTR_B(m_CallsiteIsInLoop)
+//    XATTR_B(m_IsNoReturn)
+//    XATTR_B(m_IsNoReturnKnown)
+//    XATTR_B(m_InsideThrowBlock)
+//}
+//#endif
 
 //------------------------------------------------------------------------
 // PropagateNeverToRuntime: determine if a never result should cause the
@@ -1840,46 +1840,46 @@ double ExtendedDefaultPolicy::DetermineMultiplier()
     return multiplier;
 }
 
-#if defined(DEBUG)
-//------------------------------------------------------------------------
-// DumpXml: Dump ExtendedDefaultPolicy data as XML
+//#if defined(DEBUG)
+////------------------------------------------------------------------------
+//// DumpXml: Dump ExtendedDefaultPolicy data as XML
+////
+//// Arguments:
+////    file     - stream to output to
+////    indent   - indent level
 //
-// Arguments:
-//    file     - stream to output to
-//    indent   - indent level
-
-void ExtendedDefaultPolicy::OnDumpXml(FILE* file, unsigned indent) const
-{
-    DefaultPolicy::OnDumpXml(file, indent);
-    XATTR_R8(m_ProfileFrequency)
-    XATTR_I4(m_BinaryExprWithCns)
-    XATTR_I4(m_ArgCasted)
-    XATTR_I4(m_ArgIsStructByValue)
-    XATTR_I4(m_FldAccessOverArgStruct)
-    XATTR_I4(m_FoldableBox)
-    XATTR_I4(m_Intrinsic)
-    XATTR_I4(m_BackwardJump)
-    XATTR_I4(m_ThrowBlock)
-    XATTR_I4(m_ArgIsExactCls)
-    XATTR_I4(m_ArgIsExactClsSigIsNot)
-    XATTR_I4(m_ArgIsConst)
-    XATTR_I4(m_ArgIsBoxedAtCallsite)
-    XATTR_I4(m_FoldableIntrinsic)
-    XATTR_I4(m_FoldableExpr)
-    XATTR_I4(m_FoldableExprUn)
-    XATTR_I4(m_FoldableBranch)
-    XATTR_I4(m_FoldableSwitch)
-    XATTR_I4(m_UnrollableMemop)
-    XATTR_I4(m_Switch)
-    XATTR_I4(m_DivByCns)
-    XATTR_B(m_ReturnsStructByValue)
-    XATTR_B(m_IsFromValueClass)
-    XATTR_B(m_NonGenericCallsGeneric)
-    XATTR_B(m_IsCallsiteInNoReturnRegion)
-    XATTR_B(m_HasProfileWeights)
-    XATTR_B(m_InsideThrowBlock)
-}
-#endif
+//void ExtendedDefaultPolicy::OnDumpXml(FILE* file, unsigned indent) const
+//{
+//    DefaultPolicy::OnDumpXml(file, indent);
+//    XATTR_R8(m_ProfileFrequency)
+//    XATTR_I4(m_BinaryExprWithCns)
+//    XATTR_I4(m_ArgCasted)
+//    XATTR_I4(m_ArgIsStructByValue)
+//    XATTR_I4(m_FldAccessOverArgStruct)
+//    XATTR_I4(m_FoldableBox)
+//    XATTR_I4(m_Intrinsic)
+//    XATTR_I4(m_BackwardJump)
+//    XATTR_I4(m_ThrowBlock)
+//    XATTR_I4(m_ArgIsExactCls)
+//    XATTR_I4(m_ArgIsExactClsSigIsNot)
+//    XATTR_I4(m_ArgIsConst)
+//    XATTR_I4(m_ArgIsBoxedAtCallsite)
+//    XATTR_I4(m_FoldableIntrinsic)
+//    XATTR_I4(m_FoldableExpr)
+//    XATTR_I4(m_FoldableExprUn)
+//    XATTR_I4(m_FoldableBranch)
+//    XATTR_I4(m_FoldableSwitch)
+//    XATTR_I4(m_UnrollableMemop)
+//    XATTR_I4(m_Switch)
+//    XATTR_I4(m_DivByCns)
+//    XATTR_B(m_ReturnsStructByValue)
+//    XATTR_B(m_IsFromValueClass)
+//    XATTR_B(m_NonGenericCallsGeneric)
+//    XATTR_B(m_IsCallsiteInNoReturnRegion)
+//    XATTR_B(m_HasProfileWeights)
+//    XATTR_B(m_InsideThrowBlock)
+//}
+//#endif
 
 //------------------------------------------------------------------------
 // DiscretionaryPolicy: construct a new DiscretionaryPolicy
@@ -2586,175 +2586,175 @@ int DiscretionaryPolicy::CodeSizeEstimate()
     return m_ModelCodeSizeEstimate;
 }
 
-#if defined(DEBUG)
-
-//------------------------------------------------------------------------
-// DumpSchema: dump names for all the supporting data for the
-// inline decision in CSV format.
+//#if defined(DEBUG)
 //
-// Arguments:
-//    file -- file to write to
-
-void DiscretionaryPolicy::DumpSchema(FILE* file) const
-{
-    fprintf(file, "ILSize");
-    fprintf(file, ",CallsiteFrequency");
-    fprintf(file, ",InstructionCount");
-    fprintf(file, ",LoadStoreCount");
-    fprintf(file, ",BlockCount");
-    fprintf(file, ",Maxstack");
-    fprintf(file, ",ArgCount");
-
-    for (unsigned i = 0; i < MAX_ARGS; i++)
-    {
-        fprintf(file, ",Arg%uType", i);
-    }
-
-    for (unsigned i = 0; i < MAX_ARGS; i++)
-    {
-        fprintf(file, ",Arg%uSize", i);
-    }
-
-    fprintf(file, ",LocalCount");
-    fprintf(file, ",ReturnType");
-    fprintf(file, ",ReturnSize");
-    fprintf(file, ",ArgAccessCount");
-    fprintf(file, ",LocalAccessCount");
-    fprintf(file, ",IntConstantCount");
-    fprintf(file, ",FloatConstantCount");
-    fprintf(file, ",IntLoadCount");
-    fprintf(file, ",FloatLoadCount");
-    fprintf(file, ",IntStoreCount");
-    fprintf(file, ",FloatStoreCount");
-    fprintf(file, ",SimpleMathCount");
-    fprintf(file, ",ComplexMathCount");
-    fprintf(file, ",OverflowMathCount");
-    fprintf(file, ",IntArrayLoadCount");
-    fprintf(file, ",FloatArrayLoadCount");
-    fprintf(file, ",RefArrayLoadCount");
-    fprintf(file, ",StructArrayLoadCount");
-    fprintf(file, ",IntArrayStoreCount");
-    fprintf(file, ",FloatArrayStoreCount");
-    fprintf(file, ",RefArrayStoreCount");
-    fprintf(file, ",StructArrayStoreCount");
-    fprintf(file, ",StructOperationCount");
-    fprintf(file, ",ObjectModelCount");
-    fprintf(file, ",FieldLoadCount");
-    fprintf(file, ",FieldStoreCount");
-    fprintf(file, ",StaticFieldLoadCount");
-    fprintf(file, ",StaticFieldStoreCount");
-    fprintf(file, ",LoadAddressCount");
-    fprintf(file, ",ThrowCount");
-    fprintf(file, ",ReturnCount");
-    fprintf(file, ",CallCount");
-    fprintf(file, ",CallSiteWeight");
-    fprintf(file, ",IsForceInline");
-    fprintf(file, ",IsInstanceCtor");
-    fprintf(file, ",IsFromPromotableValueClass");
-    fprintf(file, ",HasSimd");
-    fprintf(file, ",LooksLikeWrapperMethod");
-    fprintf(file, ",ArgFeedsConstantTest");
-    fprintf(file, ",IsMostlyLoadStore");
-    fprintf(file, ",ArgFeedsRangeCheck");
-    fprintf(file, ",ConstantArgFeedsConstantTest");
-    fprintf(file, ",CalleeNativeSizeEstimate");
-    fprintf(file, ",CallsiteNativeSizeEstimate");
-    fprintf(file, ",ModelCodeSizeEstimate");
-    fprintf(file, ",ModelPerCallInstructionEstimate");
-    fprintf(file, ",IsClassCtor");
-    fprintf(file, ",IsSameThis");
-    fprintf(file, ",CallerHasNewArray");
-    fprintf(file, ",CallerHasNewObj");
-    fprintf(file, ",CalleeDoesNotReturn");
-    fprintf(file, ",CalleeHasGCStruct");
-    fprintf(file, ",CallsiteDepth");
-}
-
-//------------------------------------------------------------------------
-// DumpData: dump all the supporting data for the inline decision
-// in CSV format.
+////------------------------------------------------------------------------
+//// DumpSchema: dump names for all the supporting data for the
+//// inline decision in CSV format.
+////
+//// Arguments:
+////    file -- file to write to
 //
-// Arguments:
-//    file -- file to write to
-
-void DiscretionaryPolicy::DumpData(FILE* file) const
-{
-    fprintf(file, "%u", m_CodeSize);
-    fprintf(file, ",%u", m_CallsiteFrequency);
-    fprintf(file, ",%u", m_InstructionCount);
-    fprintf(file, ",%u", m_LoadStoreCount);
-    fprintf(file, ",%u", m_BlockCount);
-    fprintf(file, ",%u", m_Maxstack);
-    fprintf(file, ",%u", m_ArgCount);
-
-    for (unsigned i = 0; i < MAX_ARGS; i++)
-    {
-        fprintf(file, ",%u", m_ArgType[i]);
-    }
-
-    for (unsigned i = 0; i < MAX_ARGS; i++)
-    {
-        fprintf(file, ",%u", (unsigned)m_ArgSize[i]);
-    }
-
-    fprintf(file, ",%u", m_LocalCount);
-    fprintf(file, ",%u", m_ReturnType);
-    fprintf(file, ",%u", (unsigned)m_ReturnSize);
-    fprintf(file, ",%u", m_ArgAccessCount);
-    fprintf(file, ",%u", m_LocalAccessCount);
-    fprintf(file, ",%u", m_IntConstantCount);
-    fprintf(file, ",%u", m_FloatConstantCount);
-    fprintf(file, ",%u", m_IntLoadCount);
-    fprintf(file, ",%u", m_FloatLoadCount);
-    fprintf(file, ",%u", m_IntStoreCount);
-    fprintf(file, ",%u", m_FloatStoreCount);
-    fprintf(file, ",%u", m_SimpleMathCount);
-    fprintf(file, ",%u", m_ComplexMathCount);
-    fprintf(file, ",%u", m_OverflowMathCount);
-    fprintf(file, ",%u", m_IntArrayLoadCount);
-    fprintf(file, ",%u", m_FloatArrayLoadCount);
-    fprintf(file, ",%u", m_RefArrayLoadCount);
-    fprintf(file, ",%u", m_StructArrayLoadCount);
-    fprintf(file, ",%u", m_IntArrayStoreCount);
-    fprintf(file, ",%u", m_FloatArrayStoreCount);
-    fprintf(file, ",%u", m_RefArrayStoreCount);
-    fprintf(file, ",%u", m_StructArrayStoreCount);
-    fprintf(file, ",%u", m_StructOperationCount);
-    fprintf(file, ",%u", m_ObjectModelCount);
-    fprintf(file, ",%u", m_FieldLoadCount);
-    fprintf(file, ",%u", m_FieldStoreCount);
-    fprintf(file, ",%u", m_StaticFieldLoadCount);
-    fprintf(file, ",%u", m_StaticFieldStoreCount);
-    fprintf(file, ",%u", m_LoadAddressCount);
-    fprintf(file, ",%u", m_ReturnCount);
-    fprintf(file, ",%u", m_ThrowCount);
-    fprintf(file, ",%u", m_CallCount);
-    fprintf(file, ",%u", m_CallSiteWeight);
-    fprintf(file, ",%u", m_IsForceInline ? 1 : 0);
-    fprintf(file, ",%u", m_IsInstanceCtor ? 1 : 0);
-    fprintf(file, ",%u", m_IsFromPromotableValueClass ? 1 : 0);
-    fprintf(file, ",%u", m_HasSimd ? 1 : 0);
-    fprintf(file, ",%u", m_LooksLikeWrapperMethod ? 1 : 0);
-    fprintf(file, ",%u", m_ArgFeedsConstantTest);
-    fprintf(file, ",%u", m_MethodIsMostlyLoadStore ? 1 : 0);
-    fprintf(file, ",%u", m_ArgFeedsRangeCheck);
-    fprintf(file, ",%u", m_ConstArgFeedsIsKnownConst ? 1 : 0);
-    fprintf(file, ",%u", m_ArgFeedsIsKnownConst ? 1 : 0);
-    fprintf(file, ",%u", m_ConstantArgFeedsConstantTest);
-    fprintf(file, ",%d", m_CalleeNativeSizeEstimate);
-    fprintf(file, ",%d", m_CallsiteNativeSizeEstimate);
-    fprintf(file, ",%d", m_ModelCodeSizeEstimate);
-    fprintf(file, ",%d", m_PerCallInstructionEstimate);
-    fprintf(file, ",%u", m_IsClassCtor ? 1 : 0);
-    fprintf(file, ",%u", m_IsSameThis ? 1 : 0);
-    fprintf(file, ",%u", m_CallerHasNewArray ? 1 : 0);
-    fprintf(file, ",%u", m_CallerHasNewObj ? 1 : 0);
-    fprintf(file, ",%u", m_IsNoReturn ? 1 : 0);
-    fprintf(file, ",%u", m_CalleeHasGCStruct ? 1 : 0);
-    fprintf(file, ",%u", m_CallsiteDepth);
-}
-
-#endif // defined(DEBUG)
+//void DiscretionaryPolicy::DumpSchema(FILE* file) const
+//{
+//    fprintf(file, "ILSize");
+//    fprintf(file, ",CallsiteFrequency");
+//    fprintf(file, ",InstructionCount");
+//    fprintf(file, ",LoadStoreCount");
+//    fprintf(file, ",BlockCount");
+//    fprintf(file, ",Maxstack");
+//    fprintf(file, ",ArgCount");
+//
+//    for (unsigned i = 0; i < MAX_ARGS; i++)
+//    {
+//        fprintf(file, ",Arg%uType", i);
+//    }
+//
+//    for (unsigned i = 0; i < MAX_ARGS; i++)
+//    {
+//        fprintf(file, ",Arg%uSize", i);
+//    }
+//
+//    fprintf(file, ",LocalCount");
+//    fprintf(file, ",ReturnType");
+//    fprintf(file, ",ReturnSize");
+//    fprintf(file, ",ArgAccessCount");
+//    fprintf(file, ",LocalAccessCount");
+//    fprintf(file, ",IntConstantCount");
+//    fprintf(file, ",FloatConstantCount");
+//    fprintf(file, ",IntLoadCount");
+//    fprintf(file, ",FloatLoadCount");
+//    fprintf(file, ",IntStoreCount");
+//    fprintf(file, ",FloatStoreCount");
+//    fprintf(file, ",SimpleMathCount");
+//    fprintf(file, ",ComplexMathCount");
+//    fprintf(file, ",OverflowMathCount");
+//    fprintf(file, ",IntArrayLoadCount");
+//    fprintf(file, ",FloatArrayLoadCount");
+//    fprintf(file, ",RefArrayLoadCount");
+//    fprintf(file, ",StructArrayLoadCount");
+//    fprintf(file, ",IntArrayStoreCount");
+//    fprintf(file, ",FloatArrayStoreCount");
+//    fprintf(file, ",RefArrayStoreCount");
+//    fprintf(file, ",StructArrayStoreCount");
+//    fprintf(file, ",StructOperationCount");
+//    fprintf(file, ",ObjectModelCount");
+//    fprintf(file, ",FieldLoadCount");
+//    fprintf(file, ",FieldStoreCount");
+//    fprintf(file, ",StaticFieldLoadCount");
+//    fprintf(file, ",StaticFieldStoreCount");
+//    fprintf(file, ",LoadAddressCount");
+//    fprintf(file, ",ThrowCount");
+//    fprintf(file, ",ReturnCount");
+//    fprintf(file, ",CallCount");
+//    fprintf(file, ",CallSiteWeight");
+//    fprintf(file, ",IsForceInline");
+//    fprintf(file, ",IsInstanceCtor");
+//    fprintf(file, ",IsFromPromotableValueClass");
+//    fprintf(file, ",HasSimd");
+//    fprintf(file, ",LooksLikeWrapperMethod");
+//    fprintf(file, ",ArgFeedsConstantTest");
+//    fprintf(file, ",IsMostlyLoadStore");
+//    fprintf(file, ",ArgFeedsRangeCheck");
+//    fprintf(file, ",ConstantArgFeedsConstantTest");
+//    fprintf(file, ",CalleeNativeSizeEstimate");
+//    fprintf(file, ",CallsiteNativeSizeEstimate");
+//    fprintf(file, ",ModelCodeSizeEstimate");
+//    fprintf(file, ",ModelPerCallInstructionEstimate");
+//    fprintf(file, ",IsClassCtor");
+//    fprintf(file, ",IsSameThis");
+//    fprintf(file, ",CallerHasNewArray");
+//    fprintf(file, ",CallerHasNewObj");
+//    fprintf(file, ",CalleeDoesNotReturn");
+//    fprintf(file, ",CalleeHasGCStruct");
+//    fprintf(file, ",CallsiteDepth");
+//}
+//
+////------------------------------------------------------------------------
+//// DumpData: dump all the supporting data for the inline decision
+//// in CSV format.
+////
+//// Arguments:
+////    file -- file to write to
+//
+//void DiscretionaryPolicy::DumpData(FILE* file) const
+//{
+//    fprintf(file, "%u", m_CodeSize);
+//    fprintf(file, ",%u", m_CallsiteFrequency);
+//    fprintf(file, ",%u", m_InstructionCount);
+//    fprintf(file, ",%u", m_LoadStoreCount);
+//    fprintf(file, ",%u", m_BlockCount);
+//    fprintf(file, ",%u", m_Maxstack);
+//    fprintf(file, ",%u", m_ArgCount);
+//
+//    for (unsigned i = 0; i < MAX_ARGS; i++)
+//    {
+//        fprintf(file, ",%u", m_ArgType[i]);
+//    }
+//
+//    for (unsigned i = 0; i < MAX_ARGS; i++)
+//    {
+//        fprintf(file, ",%u", (unsigned)m_ArgSize[i]);
+//    }
+//
+//    fprintf(file, ",%u", m_LocalCount);
+//    fprintf(file, ",%u", m_ReturnType);
+//    fprintf(file, ",%u", (unsigned)m_ReturnSize);
+//    fprintf(file, ",%u", m_ArgAccessCount);
+//    fprintf(file, ",%u", m_LocalAccessCount);
+//    fprintf(file, ",%u", m_IntConstantCount);
+//    fprintf(file, ",%u", m_FloatConstantCount);
+//    fprintf(file, ",%u", m_IntLoadCount);
+//    fprintf(file, ",%u", m_FloatLoadCount);
+//    fprintf(file, ",%u", m_IntStoreCount);
+//    fprintf(file, ",%u", m_FloatStoreCount);
+//    fprintf(file, ",%u", m_SimpleMathCount);
+//    fprintf(file, ",%u", m_ComplexMathCount);
+//    fprintf(file, ",%u", m_OverflowMathCount);
+//    fprintf(file, ",%u", m_IntArrayLoadCount);
+//    fprintf(file, ",%u", m_FloatArrayLoadCount);
+//    fprintf(file, ",%u", m_RefArrayLoadCount);
+//    fprintf(file, ",%u", m_StructArrayLoadCount);
+//    fprintf(file, ",%u", m_IntArrayStoreCount);
+//    fprintf(file, ",%u", m_FloatArrayStoreCount);
+//    fprintf(file, ",%u", m_RefArrayStoreCount);
+//    fprintf(file, ",%u", m_StructArrayStoreCount);
+//    fprintf(file, ",%u", m_StructOperationCount);
+//    fprintf(file, ",%u", m_ObjectModelCount);
+//    fprintf(file, ",%u", m_FieldLoadCount);
+//    fprintf(file, ",%u", m_FieldStoreCount);
+//    fprintf(file, ",%u", m_StaticFieldLoadCount);
+//    fprintf(file, ",%u", m_StaticFieldStoreCount);
+//    fprintf(file, ",%u", m_LoadAddressCount);
+//    fprintf(file, ",%u", m_ReturnCount);
+//    fprintf(file, ",%u", m_ThrowCount);
+//    fprintf(file, ",%u", m_CallCount);
+//    fprintf(file, ",%u", m_CallSiteWeight);
+//    fprintf(file, ",%u", m_IsForceInline ? 1 : 0);
+//    fprintf(file, ",%u", m_IsInstanceCtor ? 1 : 0);
+//    fprintf(file, ",%u", m_IsFromPromotableValueClass ? 1 : 0);
+//    fprintf(file, ",%u", m_HasSimd ? 1 : 0);
+//    fprintf(file, ",%u", m_LooksLikeWrapperMethod ? 1 : 0);
+//    fprintf(file, ",%u", m_ArgFeedsConstantTest);
+//    fprintf(file, ",%u", m_MethodIsMostlyLoadStore ? 1 : 0);
+//    fprintf(file, ",%u", m_ArgFeedsRangeCheck);
+//    fprintf(file, ",%u", m_ConstArgFeedsIsKnownConst ? 1 : 0);
+//    fprintf(file, ",%u", m_ArgFeedsIsKnownConst ? 1 : 0);
+//    fprintf(file, ",%u", m_ConstantArgFeedsConstantTest);
+//    fprintf(file, ",%d", m_CalleeNativeSizeEstimate);
+//    fprintf(file, ",%d", m_CallsiteNativeSizeEstimate);
+//    fprintf(file, ",%d", m_ModelCodeSizeEstimate);
+//    fprintf(file, ",%d", m_PerCallInstructionEstimate);
+//    fprintf(file, ",%u", m_IsClassCtor ? 1 : 0);
+//    fprintf(file, ",%u", m_IsSameThis ? 1 : 0);
+//    fprintf(file, ",%u", m_CallerHasNewArray ? 1 : 0);
+//    fprintf(file, ",%u", m_CallerHasNewObj ? 1 : 0);
+//    fprintf(file, ",%u", m_IsNoReturn ? 1 : 0);
+//    fprintf(file, ",%u", m_CalleeHasGCStruct ? 1 : 0);
+//    fprintf(file, ",%u", m_CallsiteDepth);
+//}
+//
+//#endif // defined(DEBUG)
 
 //------------------------------------------------------------------------/
 // ModelPolicy: construct a new ModelPolicy
