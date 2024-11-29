@@ -10542,7 +10542,7 @@ const char* Compiler::convertUtf16ToUtf8ForPrinting(const WCHAR* utf16String)
 
     // Allocate space for the converted string.
     // For simplicity, assume worst case: each UTF-16 code unit could map to 4 UTF-8 bytes.
-    size_t maxUtf8Len = 4 * 256; // Arbitrary, adjust as needed.
+    size_t maxUtf8Len = 4 * u16_strlen(utf16String) + 1;
     char*  utf8Str    = new char[maxUtf8Len];
     if (!utf8Str)
         return errorMessage;
