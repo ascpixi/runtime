@@ -313,6 +313,8 @@ void __cdecl _invalid_parameter(const WCHAR *_Message, const WCHAR *_FunctionNam
 #define STATUS_INVALID_PARAMETER ((NTSTATUS)0xC000000DL)
 #endif
 
+extern void exc_throw(int val);
+
 _SAFECRT__INLINE
 void __cdecl _invalid_parameter(const WCHAR *_Message, const WCHAR *_FunctionName, const WCHAR *_FileName, unsigned int _LineNumber, uintptr_t _Reserved)
 {
@@ -323,8 +325,7 @@ void __cdecl _invalid_parameter(const WCHAR *_Message, const WCHAR *_FunctionNam
     (_LineNumber);
     (_Reserved);
 #endif
-    /* invoke Watson */
-    RaiseException((DWORD)STATUS_INVALID_PARAMETER, 0, 0, nullptr);
+    exc_throw(STATUS_INVALID_PARAMETER);
 }
 
 #endif

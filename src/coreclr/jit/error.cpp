@@ -36,13 +36,12 @@ void DECLSPEC_NORETURN fatal(int errCode)
     {
         if (JitConfig.DebugBreakOnVerificationFailure())
         {
-            DebugBreak();
+            //DebugBreak();
         }
     }
 #endif // DEBUG
 
-    ULONG_PTR exceptArg = errCode;
-    RaiseException(FATAL_JIT_EXCEPTION, EXCEPTION_NONCONTINUABLE, 1, &exceptArg);
+    exc_throw(errCode);
     UNREACHABLE();
 }
 
@@ -184,31 +183,6 @@ void notYetImplemented(const char* msg, const char* filename, unsigned line)
 
         fatal(CORJIT_SKIPPED);
     }
-}
-
-/*****************************************************************************/
-LONG __JITfilter(PEXCEPTION_POINTERS pExceptionPointers, LPVOID lpvParam)
-{
-    DWORD exceptCode = pExceptionPointers->ExceptionRecord->ExceptionCode;
-
-    if (exceptCode == FATAL_JIT_EXCEPTION)
-    {
-        ErrorTrapParam* pParam = (ErrorTrapParam*)lpvParam;
-
-        assert(pExceptionPointers->ExceptionRecord->NumberParameters == 1);
-        pParam->errc = (int)pExceptionPointers->ExceptionRecord->ExceptionInformation[0];
-
-        ICorJitInfo* jitInfo = pParam->jitInfo;
-
-        if (jitInfo != nullptr)
-        {
-            jitInfo->reportFatalError((CorJitResult)pParam->errc);
-        }
-
-        return EXCEPTION_EXECUTE_HANDLER;
-    }
-
-    return EXCEPTION_CONTINUE_SEARCH;
 }
 
 /*****************************************************************************/
